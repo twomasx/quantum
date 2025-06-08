@@ -1,0 +1,304 @@
+:root {
+    --primary: #3a86ff;
+    --secondary: #ff006e;
+    --dark: #14213d;
+    --light: #f8f9fa;
+    --success: #38b000;
+    --fail: #e63946;
+    --neutral: #8338ec;
+    --card-bg: rgba(255, 255, 255, 0.1);
+    --card-border: rgba(255, 255, 255, 0.2);
+    --card-hover-bg: rgba(255, 255, 255, 0.2);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: var(--dark);
+    color: var(--light);
+    min-height: 100vh;
+    line-height: 1.6;
+    overflow-x: hidden;
+    padding-top: 4rem; /* Account for back link */
+}
+
+.container {
+    width: 90%;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 0;
+    position: relative;
+}
+
+header {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2rem;
+}
+
+.back-link {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    color: var(--primary);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 0.5rem 0.8rem;
+    border-radius: 20px;
+    backdrop-filter: blur(4px);
+    z-index: 100;
+}
+
+.back-link:hover {
+    color: var(--secondary);
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.back-link svg {
+    margin-right: 5px;
+}
+
+.game-setup-panel, .results-panel {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.game-setup-panel h3, .results-panel h3 {
+    color: var(--primary);
+    margin-bottom: 1rem;
+}
+
+.setup-options {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.option-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.option-block label {
+    font-size: 0.9rem;
+}
+
+.option-block input[type="text"],
+.option-block input[type="number"] {
+    padding: 0.5rem;
+    border-radius: 6px;
+    border: 1px solid var(--card-border);
+    background-color: var(--dark);
+    color: var(--light);
+    font-family: 'Roboto Mono', monospace;
+}
+
+button {
+    background-color: var(--primary);
+    color: var(--light);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: var(--secondary);
+}
+
+.game-area {
+    margin-top: 2rem;
+}
+
+.game-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+}
+
+#currentPlayerDisplay, #scoresDisplay {
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.grid-container {
+    display: grid;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.card {
+    width: 80px;
+    height: 80px;
+    background-color: var(--neutral);
+    border: 2px solid var(--card-border);
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem; /* Initially hidden, shown on flip */
+    font-family: 'Roboto Mono', monospace;
+    cursor: pointer;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    transform-style: preserve-3d;
+}
+
+.card .card-content {
+    display: none; /* Content (number) hidden by default */
+    transform: rotateY(180deg);
+}
+
+.card.flipped {
+    background-color: var(--primary);
+    transform: rotateY(180deg);
+}
+
+.card.flipped .card-content {
+    display: block;
+}
+
+.card.matched {
+    background-color: var(--success) !important;
+    border-color: var(--success) !important;
+    cursor: default;
+    opacity: 0.7;
+}
+
+.card.matched .card-content {
+    display: block;
+}
+
+#finalScores div {
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+    }
+    h2 {
+        font-size: 1.8rem;
+    }
+    .card {
+        width: 70px;
+        height: 70px;
+        font-size: 1.8rem;
+    }
+    .game-info {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 480px) {
+    .card {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+    }
+    .grid-container {
+        gap: 5px;
+    }
+    button {
+        width: 100%;
+        padding: 0.8rem;
+    }
+     .option-block input[type="text"],
+    .option-block input[type="number"] {
+        width: 100%;
+    }
+}
+
+.intuitive-match-popup {
+    position: absolute;
+    top: 50%; /* Centered relative to game-area or nearest positioned ancestor */
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--success);
+    color: var(--light);
+    padding: 1.5rem;
+    border-radius: 10px;
+    z-index: 2000; /* Ensure it's on top */
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+    font-size: 1.1rem;
+    font-weight: bold;
+    display: none; /* Initially hidden */
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.intuitive-match-popup.show {
+    display: block;
+    opacity: 1;
+}
+
+.realtime-intuition-panel {
+    background: rgba(255, 255, 255, 0.07);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.realtime-intuition-panel div {
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.realtime-intuition-panel div:last-child {
+    margin-bottom: 0;
+}
+
+.realtime-intuition-title {
+    color: var(--secondary);
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+    text-align: center;
+}
+
+.realtime-intuition-hr {
+    border: none;
+    border-top: 1px dashed rgba(255, 255, 255, 0.2);
+    margin: 0.75rem 0;
+}
+
+#rtLastAttemptResult {
+    font-weight: bold;
+    min-height: 1.2em; /* Ensure space even when empty */
+}
+
+footer {
+    text-align: center;
+    padding: 2rem 0;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9rem;
+    margin-top: 2rem; /* Add some space above the footer */
+} 

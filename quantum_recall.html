@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Q.U.A.N.T.U.M. - Quantum Recall</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="quantum_recall.css">
+</head>
+<body>
+    <a href="index.html" class="back-link">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+        </svg>
+        Back to Q.U.A.N.T.U.M.
+    </a>
+
+    <div class="container">
+        <header>
+            <h2>Quantum Recall: A Memory Challenge</h2>
+        </header>
+
+        <div class="game-setup-panel">
+            <h3>Game Setup</h3>
+            <div class="setup-options">
+                <div class="option-block">
+                    <label for="gridSize">Grid Size (e.g., 4x4):</label>
+                    <input type="text" id="gridSize" value="4x4">
+                </div>
+                <div class="option-block">
+                    <label for="numPlayers">Number of Players (1-4):</label>
+                    <input type="number" id="numPlayers" value="1" min="1" max="4">
+                </div>
+                <button id="startGameButton">Start Game</button>
+            </div>
+        </div>
+
+        <div class="game-area" style="display: none;">
+            <div class="game-info">
+                <div id="currentPlayerDisplay">Current Player: Player 1</div>
+                <div id="scoresDisplay">Scores: </div>
+            </div>
+            
+            <div id="realtimeIntuitionPanel" class="realtime-intuition-panel">
+                <h4 class="realtime-intuition-title">Real-Time Intuition Tracker</h4>
+                <div id="rtTargetValue">Target Value: -</div>
+                <div id="rtUnseenOptions">Unseen Options: -</div>
+                <div id="rtChanceOfMatch">Chance of Intuitive Match: -</div>
+                <hr class="realtime-intuition-hr">
+                <div id="rtLastAttemptResult">Last Attempt: -</div>
+            </div>
+
+            <div class="grid-container" id="gridContainer">
+                <!-- Grid will be generated here by JavaScript -->
+            </div>
+        </div>
+
+        <div class="results-panel" style="display: none;">
+            <h3 id="winnerDisplay"></h3>
+            <h4>Final Scores:</h4>
+            <div id="finalScores"></div>
+            <hr style="margin: 1rem 0; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+            <h4>Intuition Analysis (vs. Chance):</h4>
+            <div id="intuitionStats"></div>
+            <button id="playAgainButton" style="margin-top: 1.5rem;">Play Again</button>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>Q.U.A.N.T.U.M. - Quantum Recall © 2025 | All data is processed locally</p>
+    </footer>
+
+    <script src="quantum_recall.js"></script>
+</body>
+</html> 

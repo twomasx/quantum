@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Q.U.A.N.T.U.M. - Precognition: Predict-the-Bit</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #3a86ff;
+      --secondary: #ff006e;
+      --dark: #14213d;
+      --light: #f8f9fa;
+      --success: #38b000;
+      --fail: #e63946;
+      --neutral: #8338ec;
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--dark);
+      color: var(--light);
+      min-height: 100vh;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    .container {
+      width: 90%;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem 0;
+      position: relative;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .probability-display {
+        margin-top: 0.5rem;
+        align-self: flex-start;
+      }
+    }
+    .logo {
+      color: var(--primary);
+      font-size: 1.5rem;
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .probability-display {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      font-size: 0.9rem;
+    }
+    .help-icon {
+      margin-left: 0.5rem;
+      cursor: help;
+      color: var(--primary);
+      font-size: 1.2rem;
+    }
+    h2 {
+      color: var(--primary);
+      margin-bottom: 1rem;
+      font-size: 2rem;
+    }
+    .description {
+      margin-bottom: 2rem;
+      font-size: 1rem;
+    }
+    .control-panel {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .option-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .option-block {
+      min-width: 140px;
+    }
+    .option-label {
+      display: block;
+      margin-bottom: 0.8rem;
+      font-weight: bold;
+      color: var(--primary);
+    }
+    label {
+      margin-right: 1.2rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+    input[type="radio"] {
+      margin-right: 0.5rem;
+      cursor: pointer;
+      width: 18px;
+      height: 18px;
+    }
+    input[type="number"] {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      padding: 0.8rem;
+      border-radius: 4px;
+      width: 120px;
+      font-size: 1rem;
+    }
+    .button-container {
+      position: relative;
+      z-index: 10;
+    }
+    button {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 30px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      min-width: 120px;
+      display: block;
+      margin: 0.5rem 0 1rem;
+      position: relative;
+      z-index: 10;
+    }
+    button:hover {
+      background-color: var(--secondary);
+      transform: scale(1.05);
+    }
+    button[disabled] {
+      background-color: rgba(255, 255, 255, 0.2);
+      cursor: not-allowed;
+      transform: none;
+    }
+    #progress {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
+    .results-panel {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .results-title {
+      color: var(--primary);
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+    .success { color: var(--success); }
+    .fail { color: var(--fail); }
+    
+    /* Bit animation */
+    .bit-animation-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .bit-display {
+      width: 200px;
+      height: 200px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, rgba(58, 134, 255, 0.3), rgba(131, 56, 236, 0.3));
+      backdrop-filter: blur(10px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 8rem;
+      font-weight: bold;
+      color: var(--light);
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    
+    /* Control group styles */
+    #controlResults {
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-top: 1rem;
+      border: 1px dashed rgba(255, 255, 255, 0.1);
+    }
+    
+    hr {
+      border: none;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      margin: 1rem 0;
+    }
+    
+    /* Recent predictions visualization */
+    .recent-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 0.8rem;
+    }
+    .prediction-result {
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+    .prediction-success {
+      background-color: rgba(56, 176, 0, 0.2);
+      border: 1px solid var(--success);
+    }
+    .prediction-fail {
+      background-color: rgba(230, 57, 70, 0.2);
+      border: 1px solid var(--fail);
+    }
+    
+    /* Back to home button */
+    .back-link {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      color: var(--primary);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      font-size: 0.9rem;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 0.5rem 0.8rem;
+      border-radius: 20px;
+      backdrop-filter: blur(4px);
+      z-index: 100;
+    }
+    .back-link:hover {
+      color: var(--secondary);
+      background: rgba(0, 0, 0, 0.5);
+    }
+    .back-link svg {
+      margin-right: 5px;
+    }
+    
+    /* Mobile optimizations */
+    @media (max-width: 768px) {
+      .container {
+        width: 95%;
+        padding-top: 4rem;
+      }
+      h2 {
+        font-size: 1.8rem;
+      }
+      .option-group {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      .option-block {
+        width: 100%;
+      }
+      .control-panel, .results-panel {
+        padding: 1.2rem;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .back-link {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.8rem;
+      }
+      .bit-display {
+        width: 160px;
+        height: 160px;
+        font-size: 6rem;
+      }
+      .container {
+        padding-top: 3.5rem;
+      }
+      h2 {
+        font-size: 1.5rem;
+      }
+      button {
+        width: 100%;
+      }
+      .prediction-result {
+        width: 22px;
+        height: 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a href="index.html" class="back-link">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+      <path d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+    </svg>
+    Back to Q.U.A.N.T.U.M.
+  </a>
+
+  <div class="bit-animation-container" id="bitAnimation">
+    <div class="bit-display" id="bitDisplay">1</div>
+  </div>
+  
+  <div class="container">
+    <header>
+      <h2>Precognition: Predict-the-Bit</h2>
+      <div class="probability-display">
+        <span>Longest Streak Prob: </span>
+        <span id="maxStreakProbability">N/A</span>
+        <span class="help-icon" title="The probability of achieving a streak of N successful outcomes (correct predictions) by chance is (0.5)^N, or 1 in 2^N. For example, a streak of 3 has a probability of (0.5)^3 = 1/8.">ⓘ</span>
+      </div>
+    </header>
+    
+    <p class="description">Predict whether the next random bit will be a 0 or 1. All randomness is generated locally and securely in your browser.</p>
+    
+    <div class="control-panel">
+      <div class="option-group">
+        <div class="option-block">
+          <span class="option-label">Your Prediction:</span>
+          <div>
+            <label>
+              <input type="radio" name="guess" value="1" checked> 1
+            </label>
+          </div>
+          <div>
+            <label>
+              <input type="radio" name="guess" value="0"> 0
+            </label>
+          </div>
+        </div>
+        
+        <div class="option-block">
+          <span class="option-label">Mode:</span>
+          <div>
+            <label>
+              <input type="radio" name="mode" value="batch" checked> Batch
+            </label>
+          </div>
+          <div>
+            <label>
+              <input type="radio" name="mode" value="single"> Single Prediction
+            </label>
+          </div>
+        </div>
+      </div>
+      
+      <div id="iterationsLabel">
+        <span class="option-label">Iterations:</span>
+        <input type="number" id="iterations" value="100" min="1" max="10000">
+      </div>
+      
+      <div class="button-container">
+        <button id="runButton">Run Batch</button>
+      </div>
+      <div id="progress"></div>
+    </div>
+    
+    <div class="results-panel">
+      <div class="results-title">Results</div>
+      <div id="results">No trials yet.</div>
+      
+      <h4 style="margin-top: 1rem; color: var(--primary);">Recent Predictions</h4>
+      <div class="recent-container" id="recentVisual"></div>
+    </div>
+  </div>
+
+  <script>
+    // Immediately execute to ensure everything is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+      let data = [];
+
+      const iterationsInput = document.getElementById('iterations');
+      const iterationsLabel = document.getElementById('iterationsLabel');
+      const runButton = document.getElementById('runButton');
+      const modeRadios = document.querySelectorAll('input[name="mode"]');
+      const bitAnimation = document.getElementById('bitAnimation');
+      const bitDisplay = document.getElementById('bitDisplay');
+      
+      // Add debugging to verify elements are found
+      console.log('Found button:', runButton);
+      
+      function handleModeChange() {
+        const selectedMode = document.querySelector('input[name="mode"]:checked').value;
+        if (selectedMode === 'single') {
+          iterationsInput.style.display = 'none';
+          iterationsLabel.style.display = 'none';
+          runButton.textContent = 'Predict One Bit';
+        } else { // batch
+          iterationsInput.style.display = 'inline-block';
+          iterationsLabel.style.display = 'block';
+          runButton.textContent = 'Run Batch';
+        }
+      }
+
+      function playBitAnimation(bit) {
+        // Set the bit value in the display
+        bitDisplay.textContent = bit;
+        
+        // Set animation colors based on bit value
+        if (bit === 1) {
+          bitDisplay.style.background = 'linear-gradient(135deg, rgba(58, 134, 255, 0.3), rgba(131, 56, 236, 0.3))';
+          bitDisplay.style.color = '#ffffff';
+        } else {
+          bitDisplay.style.background = 'linear-gradient(135deg, rgba(255, 0, 110, 0.3), rgba(131, 56, 236, 0.3))';
+          bitDisplay.style.color = '#ffffff';
+        }
+        
+        // Show animation
+        bitAnimation.style.opacity = '1';
+        
+        // Hide after animation
+        setTimeout(() => {
+          bitAnimation.style.opacity = '0';
+        }, 2000);
+      }
+
+      modeRadios.forEach(radio => radio.addEventListener('change', handleModeChange));
+      handleModeChange();
+
+      function updateStats() {
+        const total = data.length;
+        const maxStreakProbabilityEl = document.getElementById('maxStreakProbability');
+
+        let controlResultsDiv = document.getElementById('controlResults');
+        if (!controlResultsDiv) {
+          controlResultsDiv = document.createElement('div');
+          controlResultsDiv.id = 'controlResults';
+          const resultsPanel = document.querySelector('.results-panel');
+          resultsPanel.appendChild(controlResultsDiv);
+        }
+
+        const recentVisual = document.getElementById('recentVisual');
+
+        if (!total) {
+          results.innerHTML = "No trials yet.";
+          recentVisual.innerHTML = "";
+          if (maxStreakProbabilityEl) maxStreakProbabilityEl.textContent = 'N/A';
+          controlResultsDiv.innerHTML = '<hr><h4 style="color: var(--primary);">Control Group Simulation (vs. fixed \'1\')</h4>No trials yet.';
+          return;
+        }
+
+        const wins = data.filter(x => x.success).length;
+        let current = 0, maxStreak = 0;
+        data.forEach(d => {
+          if (d.success) { current++; maxStreak = Math.max(maxStreak, current);}
+          else current = 0;
+        });
+
+        if (maxStreakProbabilityEl) {
+            if (maxStreak > 0) {
+              const oneInX = Math.pow(2, maxStreak);
+              maxStreakProbabilityEl.textContent = `1 in ${oneInX.toLocaleString()}`;
+            } else {
+              maxStreakProbabilityEl.textContent = 'N/A';
+            }
+        }
+
+        let last20 = data.slice(-20);
+        let last20wins = last20.filter(x => x.success).length;
+        results.innerHTML = `
+          <b>Total Trials:</b> ${total}<br>
+          <b>Correct Guesses:</b> ${wins} (${((wins/total)*100).toFixed(2)}%)<br>
+          <b>Longest Streak:</b> ${maxStreak}<br>
+          <b>Last 20 Success Rate:</b> ${((last20wins/last20.length)*100).toFixed(1)}%<br>
+        `;
+        
+        // Visual representation of recent predictions
+        recentVisual.innerHTML = '';
+        const recentPredictions = data.slice(-30);
+        recentPredictions.forEach(prediction => {
+          const predictionElement = document.createElement('div');
+          predictionElement.className = `prediction-result ${prediction.success ? 'prediction-success' : 'prediction-fail'}`;
+          predictionElement.textContent = prediction.actual;
+          predictionElement.title = `Trial #${prediction.trial}: You predicted ${prediction.guess !== undefined ? prediction.guess : (prediction.success ? prediction.actual : (prediction.actual === 1 ? 0 : 1))}, actual result was ${prediction.actual} - ${prediction.success ? 'Correct' : 'Incorrect'}`;
+          recentVisual.appendChild(predictionElement);
+        });
+
+        // Control Group Stats Calculation and Display
+        const controlWins = data.filter(x => x.controlSuccess).length;
+        let controlCurrentStreak = 0, longestControlStreak = 0;
+        data.forEach(d => {
+          if (d.controlSuccess) { controlCurrentStreak++; longestControlStreak = Math.max(longestControlStreak, controlCurrentStreak);}
+          else controlCurrentStreak = 0;
+        });
+        let controlLast20 = data.slice(-20);
+        let controlLast20wins = controlLast20.filter(x => x.controlSuccess).length;
+        let controlMaxStreakProbabilityText = 'N/A';
+        if (longestControlStreak > 0) {
+          const oneInX = Math.pow(2, longestControlStreak);
+          controlMaxStreakProbabilityText = `1 in ${oneInX.toLocaleString()}`;
+        }
+
+        controlResultsDiv.innerHTML = `
+          <hr>
+          <h4 style="color: var(--primary);">Control Group Simulation (vs. fixed \'1\')</h4>
+          <b>Total Trials:</b> ${total}<br>
+          <b>Matches \'1\':</b> ${controlWins} (${total ? ((controlWins/total)*100).toFixed(2) : '0.00'}%)<br>
+          <b>Longest \'1\' Streak:</b> ${longestControlStreak} (Prob: ${controlMaxStreakProbabilityText})<br>
+          <b>Last 20 \'1\' Success Rate:</b> ${controlLast20.length ? ((controlLast20wins/controlLast20.length)*100).toFixed(1) : '0.0'}%<br>
+        `;
+      }
+
+      // Make sure the click handler is properly attached and working
+      if (runButton) {
+        runButton.onclick = async function() {
+          console.log('Button clicked!');
+          const selectedMode = document.querySelector('input[name="mode"]:checked').value;
+          const guess = parseInt(document.querySelector('input[name="guess"]:checked').value, 10);
+          const controlGuessValue = 1; // Fixed control guess: 1
+          
+          console.log(`Your prediction: ${guess} (value from radio button)`);
+
+          if (selectedMode === 'batch') {
+            data = []; 
+            updateStats();
+            progress.textContent = '';
+            let n = Math.max(1, Math.min(10000, +iterations.value || 100));
+            for (let i = 0; i < n; i++) {
+              const arr = new Uint8Array(1);
+              window.crypto.getRandomValues(arr);
+              const actual = arr[0] % 2;
+              const success = (guess === actual);
+              
+              // Log first few results for debugging
+              if (i < 5) {
+                console.log(`Trial ${i+1}: You predicted ${guess}, actual result was ${actual} - ${success ? 'Correct' : 'Incorrect'}`);
+              }
+              
+              // Control trial logic: Compare control's fixed guess against the user's 'actual' bit
+              const controlSuccess = (controlGuessValue === actual);
+              data.push({
+                trial: data.length + 1,
+                actual,
+                success,
+                guess,
+                controlActual: actual, // Control faced the same 'actual' bit
+                controlSuccess
+              });
+
+              if (i % 10 === 0 || i === n-1) {
+                progress.textContent = `Progress: ${i+1}/${n}`;
+                updateStats();
+                await new Promise(r => setTimeout(r, 5));
+              }
+            }
+            progress.textContent = `Complete: ${n} trials.`;
+          } else { // single prediction mode
+            const arr = new Uint8Array(1);
+            window.crypto.getRandomValues(arr);
+            const actual = arr[0] % 2;
+            const success = (guess === actual);
+            console.log(`Single trial: You predicted ${guess}, actual result was ${actual} - ${success ? 'Correct' : 'Incorrect'}`);
+            
+            // Control trial logic: Compare control's fixed guess against the user's 'actual' bit
+            const controlSuccess = (controlGuessValue === actual);
+            data.push({
+              trial: data.length + 1,
+              actual,
+              success,
+              guess,
+              controlActual: actual, // Control faced the same 'actual' bit
+              controlSuccess
+            });
+            progress.textContent = `Predicted one bit. Total trials: ${data.length}`;
+            playBitAnimation(actual);
+          }
+          updateStats();
+        };
+        
+        // Also add an extra event listener to be sure
+        runButton.addEventListener('click', function(e) {
+          console.log('Button clicked through addEventListener!');
+        });
+      } else {
+        console.error('Run button not found!');
+      }
+
+      // Initialize stats
+      updateStats();
+      
+      // Ensure this code executes
+      console.log('Script initialization complete');
+    });
+  </script>
+</body>
+</html>
