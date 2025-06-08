@@ -1,14 +1,12 @@
+@import url('quantum_core.css');
+
 :root {
-    --primary: #3a86ff;
-    --secondary: #ff006e;
-    --dark: #14213d;
-    --light: #f8f9fa;
-    --success: #38b000;
-    --fail: #e63946;
-    --neutral: #8338ec;
-    --card-bg: rgba(255, 255, 255, 0.1);
-    --card-border: rgba(255, 255, 255, 0.2);
-    --card-hover-bg: rgba(255, 255, 255, 0.2);
+    --game-bg: linear-gradient(135deg, rgba(26, 26, 46, 0.95) 0%, rgba(10, 10, 15, 0.95) 100%);
+    --card-bg: rgba(0, 255, 255, 0.05);
+    --card-border: rgba(0, 255, 255, 0.3);
+    --card-hover-bg: rgba(0, 255, 255, 0.1);
+    --card-flipped-bg: linear-gradient(135deg, rgba(0, 255, 255, 0.2) 0%, rgba(255, 0, 255, 0.2) 100%);
+    --card-matched-bg: linear-gradient(135deg, rgba(0, 255, 136, 0.3) 0%, rgba(0, 255, 255, 0.3) 100%);
 }
 
 * {
@@ -18,13 +16,31 @@
 }
 
 body {
-    font-family: 'Montserrat', sans-serif;
-    background-color: var(--dark);
+    font-family: 'Rajdhani', sans-serif;
+    background: var(--dark);
+    background-image: 
+        radial-gradient(ellipse at 25% 25%, rgba(0, 255, 255, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 75% 75%, rgba(255, 0, 255, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(0, 255, 136, 0.1) 0%, transparent 70%);
     color: var(--light);
     min-height: 100vh;
     line-height: 1.6;
     overflow-x: hidden;
-    padding-top: 4rem; /* Account for back link */
+    padding-top: 4rem;
+    position: relative;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="1" height="100" x="50" fill="rgba(0,255,255,0.02)"/><rect width="100" height="1" y="50" fill="rgba(255,0,255,0.02)"/></svg>');
+    background-size: 100px 100px;
+    pointer-events: none;
+    z-index: 0;
 }
 
 .container {
@@ -41,12 +57,20 @@ header {
 }
 
 h2 {
-    color: var(--primary);
-    font-size: 2rem;
+    font-family: 'Orbitron', sans-serif;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 2.5rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+    animation: quantum-flicker 5s ease-in-out infinite;
 }
 
 .back-link {
-    position: absolute;
+    position: fixed;
     top: 1rem;
     left: 1rem;
     color: var(--primary);
@@ -54,16 +78,21 @@ h2 {
     display: flex;
     align-items: center;
     font-size: 0.9rem;
-    background: rgba(0, 0, 0, 0.3);
-    padding: 0.5rem 0.8rem;
-    border-radius: 20px;
-    backdrop-filter: blur(4px);
-    z-index: 100;
+    background: linear-gradient(135deg, rgba(0, 255, 255, 0.1) 0%, rgba(255, 0, 255, 0.1) 100%);
+    padding: 0.6rem 1.2rem;
+    border-radius: 30px;
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+    border: 1px solid rgba(0, 255, 255, 0.3);
+    transition: all 0.3s ease;
+    font-weight: 600;
+    letter-spacing: 1px;
 }
 
 .back-link:hover {
-    color: var(--secondary);
-    background: rgba(0, 0, 0, 0.5);
+    transform: translateX(5px);
+    box-shadow: 0 5px 20px rgba(0, 255, 255, 0.4);
+    border-color: var(--primary);
 }
 
 .back-link svg {
@@ -71,16 +100,36 @@ h2 {
 }
 
 .game-setup-panel, .results-panel {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border: 1px solid rgba(0, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.game-setup-panel::before, .results-panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.5), transparent);
+    animation: shimmer 3s linear infinite;
 }
 
 .game-setup-panel h3, .results-panel h3 {
+    font-family: 'Orbitron', sans-serif;
     color: var(--primary);
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
+    font-size: 1.6rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
 }
 
 .setup-options {
@@ -101,28 +150,61 @@ h2 {
 
 .option-block input[type="text"],
 .option-block input[type="number"] {
-    padding: 0.5rem;
-    border-radius: 6px;
-    border: 1px solid var(--card-border);
-    background-color: var(--dark);
+    padding: 0.8rem 1rem;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.05);
     color: var(--light);
-    font-family: 'Roboto Mono', monospace;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.option-block input[type="text"]:focus,
+.option-block input[type="number"]:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.08);
 }
 
 button {
-    background-color: var(--primary);
-    color: var(--light);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    color: var(--dark);
     border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
+    padding: 12px 30px;
+    border-radius: 50px;
     cursor: pointer;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Orbitron', sans-serif;
     font-weight: bold;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.9rem;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 255, 255, 0.3);
+}
+
+button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: left 0.5s ease;
 }
 
 button:hover {
-    background-color: var(--secondary);
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 6px 20px rgba(0, 255, 255, 0.4), 0 0 30px rgba(255, 0, 255, 0.3);
+}
+
+button:hover::before {
+    left: 100%;
 }
 
 .game-area {
@@ -133,15 +215,33 @@ button:hover {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1.5rem;
-    padding: 1rem;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 8px;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+    border-radius: 15px;
+    border: 1px solid rgba(0, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+}
+
+.game-info::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 0, 255, 0.5), transparent);
+    animation: shimmer 3s linear infinite;
 }
 
 #currentPlayerDisplay, #scoresDisplay {
+    font-family: 'Orbitron', sans-serif;
     font-size: 1.1rem;
     font-weight: bold;
+    letter-spacing: 1px;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
 }
 
 .grid-container {
@@ -152,44 +252,83 @@ button:hover {
 }
 
 .card {
-    width: 80px;
-    height: 80px;
-    background-color: var(--neutral);
+    width: 90px;
+    height: 90px;
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(0, 255, 255, 0.1) 100%);
     border: 2px solid var(--card-border);
-    border-radius: 8px;
+    border-radius: 15px;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 2rem; /* Initially hidden, shown on flip */
-    font-family: 'Roboto Mono', monospace;
+    font-size: 2.2rem;
+    font-family: 'Orbitron', sans-serif;
     cursor: pointer;
-    transition: transform 0.3s ease, background-color 0.3s ease;
+    transition: all 0.3s ease;
     transform-style: preserve-3d;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, var(--primary), var(--secondary), var(--accent));
+    border-radius: 15px;
+    opacity: 0;
+    z-index: -1;
+    transition: opacity 0.3s ease;
+    animation: holographic-shift 3s linear infinite;
+}
+
+.card:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(0, 255, 255, 0.3);
+}
+
+.card:hover::before {
+    opacity: 0.3;
 }
 
 .card .card-content {
     display: none; /* Content (number) hidden by default */
-    transform: rotateY(180deg);
 }
 
 .card.flipped {
-    background-color: var(--primary);
-    transform: rotateY(180deg);
+    background: var(--card-flipped-bg);
+    transform: rotateY(0deg);
+    border-color: var(--primary);
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
 }
 
 .card.flipped .card-content {
     display: block;
+    text-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+    animation: pulse 1s ease-in-out infinite;
 }
 
 .card.matched {
-    background-color: var(--success) !important;
+    background: var(--card-matched-bg) !important;
     border-color: var(--success) !important;
     cursor: default;
-    opacity: 0.7;
+    transform: scale(0.95);
+    animation: matched-celebration 0.6s ease;
 }
 
 .card.matched .card-content {
     display: block;
+    color: var(--success);
+    text-shadow: 0 0 30px rgba(0, 255, 136, 0.8);
+}
+
+@keyframes matched-celebration {
+    0% { transform: scale(1) rotateY(0deg); }
+    50% { transform: scale(1.2) rotateY(0deg) rotateZ(10deg); }
+    100% { transform: scale(0.95) rotateY(0deg) rotateZ(0deg); }
 }
 
 #finalScores div {
@@ -261,11 +400,26 @@ button:hover {
 }
 
 .realtime-intuition-panel {
-    background: rgba(255, 255, 255, 0.07);
-    border-radius: 8px;
-    padding: 1rem;
-    margin-bottom: 1.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: linear-gradient(135deg, rgba(0, 255, 136, 0.05) 0%, rgba(255, 0, 255, 0.05) 100%);
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border: 1px solid rgba(0, 255, 136, 0.3);
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 255, 136, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.realtime-intuition-panel::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(0, 255, 136, 0.1) 0%, transparent 70%);
+    animation: energy-pulse 4s ease-in-out infinite;
 }
 
 .realtime-intuition-panel div {
@@ -278,10 +432,17 @@ button:hover {
 }
 
 .realtime-intuition-title {
-    color: var(--secondary);
-    font-size: 1.1rem;
-    margin-bottom: 0.75rem;
+    font-family: 'Orbitron', sans-serif;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--secondary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
     text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
 }
 
 .realtime-intuition-hr {
@@ -291,14 +452,80 @@ button:hover {
 }
 
 #rtLastAttemptResult {
+    font-family: 'Orbitron', sans-serif;
     font-weight: bold;
-    min-height: 1.2em; /* Ensure space even when empty */
+    min-height: 1.4em;
+    font-size: 1rem;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    padding: 0.5rem;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.02);
+    text-align: center;
 }
 
 footer {
     text-align: center;
-    padding: 2rem 0;
-    color: rgba(255, 255, 255, 0.6);
+    padding: 3rem 0 2rem;
+    color: rgba(255, 255, 255, 0.5);
     font-size: 0.9rem;
-    margin-top: 2rem; /* Add some space above the footer */
+    font-family: 'Share Tech Mono', monospace;
+    letter-spacing: 1px;
+    margin-top: 3rem;
+    position: relative;
+}
+
+footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--primary), transparent);
+}
+
+/* Additional animations */
+@keyframes flip-ripple {
+    to {
+        width: 150px;
+        height: 150px;
+        opacity: 0;
+    }
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+@keyframes energy-pulse {
+    0%, 100% { transform: scale(1); opacity: 0.3; }
+    50% { transform: scale(1.1); opacity: 0.1; }
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+@keyframes quantum-flicker {
+    0% { opacity: 1; }
+    10% { opacity: 0.9; }
+    20% { opacity: 1; }
+    30% { opacity: 0.95; }
+    40% { opacity: 1; }
+    100% { opacity: 1; }
+}
+
+/* Success/Fail color updates */
+#rtLastAttemptResult[style*="success"] {
+    background: rgba(0, 255, 136, 0.1) !important;
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+}
+
+#rtLastAttemptResult[style*="fail"] {
+    background: rgba(255, 0, 102, 0.1) !important;
+    box-shadow: 0 0 20px rgba(255, 0, 102, 0.3);
 } 

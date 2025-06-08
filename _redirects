@@ -1,0 +1,5 @@
+# Redirect default Netlify subdomain to primary domain (update with your domain)
+# https://yoursite.netlify.app/* https://www.yourdomain.com/:splat 301!
+
+# Handle 404s
+/*    /index.html   404

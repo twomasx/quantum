@@ -229,6 +229,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function flipCard(card) {
         card.classList.add('flipped');
+        
+        // Add futuristic flip effect
+        const ripple = document.createElement('div');
+        ripple.style.cssText = `
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, rgba(0, 255, 255, 0.6) 0%, transparent 70%);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            left: 50%;
+            top: 50%;
+            animation: flip-ripple 0.6s ease-out;
+        `;
+        card.appendChild(ripple);
+        
+        setTimeout(() => ripple.remove(), 600);
+        
         // Add to seenCardIds AFTER it's flipped and processed for intuition check
         // This will be handled in checkForMatch or after the turn resolves
     }
