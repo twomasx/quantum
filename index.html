@@ -57,15 +57,16 @@
       width: 90%;
       max-width: 1200px;
       margin: 0 auto;
-      padding: 2rem 0;
+      padding: 2rem 1rem;
       position: relative;
       z-index: 10;
+      overflow: hidden;
     }
     header {
       text-align: center;
-      padding: 3rem 0;
+      padding: 3rem 1rem;
       position: relative;
-      overflow: visible;
+      overflow: hidden;
       z-index: 10;
     }
     header h1 {
@@ -432,44 +433,153 @@
     
     /* Mobile optimizations */
     @media (max-width: 768px) {
+      body {
+        overflow-x: hidden;
+      }
+      
       header h1 {
-        font-size: 2.2rem;
+        font-size: 2.5rem;
+        letter-spacing: 1px;
+        line-height: 1.2;
       }
       header h2 {
-        font-size: 1.1rem;
+        font-size: 1rem;
+        padding: 0 10px;
+        line-height: 1.4;
       }
       .container {
         width: 95%;
-        padding: 1rem 0;
+        padding: 1rem 10px;
+        max-width: 100%;
       }
       .cards {
         gap: 1.5rem;
         margin: 2rem 0;
+        grid-template-columns: 1fr;
       }
       .card {
-        padding: 1.2rem;
+        padding: 1.5rem;
+        min-height: auto;
+      }
+      .card h3 {
+        font-size: 1.2rem;
+      }
+      .card-icon {
+        font-size: 1.5rem;
+      }
+      .btn {
+        width: 100%;
+        padding: 14px 20px;
+        font-size: 0.85rem;
       }
       .acronym {
-        padding: 1rem;
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+      }
+      .acronym ul li {
+        font-size: 1rem;
+        margin-bottom: 1rem;
       }
       .about-section, .stats-section {
         padding: 1.5rem;
+        margin: 2rem 0;
+      }
+      .about-section h2, .stats-section h2 {
+        font-size: 1.5rem;
+      }
+      
+      /* Fix quantum core positioning on mobile */
+      .quantum-core {
+        width: 300px;
+        height: 300px;
+        opacity: 0.3;
+      }
+      .quantum-nucleus {
+        width: 50px;
+        height: 50px;
+      }
+      .quantum-ring:nth-child(2) {
+        width: 120px;
+        height: 120px;
+      }
+      .quantum-ring:nth-child(3) {
+        width: 180px;
+        height: 180px;
+      }
+      .quantum-ring:nth-child(4) {
+        width: 240px;
+        height: 240px;
+      }
+      
+      /* Fix notification positioning */
+      .notification, .achievement-popup {
+        right: 10px;
+        left: 10px;
+        max-width: calc(100% - 20px);
       }
     }
     
     @media (max-width: 480px) {
       header h1 {
-        font-size: 1.8rem;
+        font-size: 2rem;
+        letter-spacing: 0.5px;
       }
       header h2 {
-        font-size: 1rem;
+        font-size: 0.9rem;
         margin-bottom: 1rem;
+        padding: 0 5px;
+      }
+      .container {
+        padding: 0.5rem 5px;
+      }
+      .acronym {
+        padding: 1rem;
+      }
+      .acronym h3 {
+        font-size: 1.2rem;
       }
       .acronym ul li {
-        flex-direction: column;
+        flex-direction: row;
+        align-items: center;
+        font-size: 0.95rem;
       }
       .acronym ul li strong {
-        margin-bottom: 0.2rem;
+        margin-right: 1rem;
+        min-width: 30px;
+        font-size: 1.1rem;
+      }
+      .acronym ul li::before {
+        width: 6px;
+        height: 6px;
+        margin-right: 10px;
+      }
+      
+      /* Further reduce quantum core on small screens */
+      .quantum-core {
+        width: 250px;
+        height: 250px;
+        opacity: 0.2;
+      }
+      .quantum-nucleus {
+        width: 40px;
+        height: 40px;
+      }
+      .quantum-ring:nth-child(2) {
+        width: 100px;
+        height: 100px;
+      }
+      .quantum-ring:nth-child(3) {
+        width: 150px;
+        height: 150px;
+      }
+      .quantum-ring:nth-child(4) {
+        width: 200px;
+        height: 200px;
+      }
+      
+      footer {
+        padding: 2rem 10px 1.5rem;
+        font-size: 0.8rem;
       }
     }
 

@@ -536,19 +536,28 @@
     
     /* Mobile optimizations */
     @media (max-width: 768px) {
+      body {
+        overflow-x: hidden;
+      }
       .container {
         width: 95%;
-        padding-top: 4rem;
+        padding: 4rem 10px 2rem;
+        max-width: 100%;
       }
       header {
         flex-direction: column;
         align-items: flex-start;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
       }
       h2 {
         font-size: 1.8rem;
+        line-height: 1.2;
       }
       .probability-display {
         align-self: flex-start;
+        width: 100%;
+        font-size: 0.85rem;
       }
       .option-group {
         flex-direction: column;
@@ -556,9 +565,43 @@
       }
       .option-block {
         width: 100%;
+        min-width: auto;
       }
       .control-panel, .results-panel {
-        padding: 1.2rem;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+      input[type="number"] {
+        width: 100%;
+        max-width: 200px;
+      }
+      button {
+        width: 100%;
+        max-width: 250px;
+        margin: 0.5rem auto 1rem;
+      }
+      
+      /* Fix coin animation positioning */
+      .coin-container {
+        padding: 20px;
+      }
+      .coin {
+        width: 150px;
+        height: 150px;
+      }
+      .coin-front, .coin-back {
+        font-size: 2.5rem;
+      }
+      
+      /* Fix results grid */
+      .results-panel div[style*="grid"] {
+        grid-template-columns: 1fr !important;
+        gap: 0.8rem !important;
+      }
+      
+      /* Fix particle container */
+      .coin-particle {
+        display: none; /* Hide particles on mobile for performance */
       }
     }
     
@@ -566,23 +609,63 @@
       .back-link {
         padding: 0.4rem 0.6rem;
         font-size: 0.8rem;
+        top: 0.5rem;
+        left: 0.5rem;
+      }
+      .container {
+        width: 98%;
+        padding: 3.5rem 5px 1.5rem;
+      }
+      h2 {
+        font-size: 1.5rem;
+        margin-bottom: 0.8rem;
+      }
+      .description {
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+      }
+      .control-panel, .results-panel {
+        padding: 1rem;
+        border-radius: 15px;
+      }
+      .option-label {
+        font-size: 0.85rem;
+      }
+      label {
+        font-size: 0.95rem;
+      }
+      input[type="radio"] {
+        width: 16px;
+        height: 16px;
+      }
+      button {
+        padding: 10px 20px;
+        font-size: 0.9rem;
       }
       .coin {
         width: 120px;
         height: 120px;
       }
-      .container {
-        padding-top: 3.5rem;
-      }
-      h2 {
-        font-size: 1.5rem;
-      }
-      button {
-        width: 100%;
+      .coin-front, .coin-back {
+        font-size: 2rem;
       }
       .flip-result {
         width: 20px;
         height: 20px;
+        font-size: 0.7rem;
+      }
+      .results-title {
+        font-size: 1.2rem;
+      }
+      #controlResults {
+        font-size: 0.9rem;
+        padding: 0.8rem;
+      }
+      
+      /* Fix text overflow */
+      * {
+        word-wrap: break-word;
+        overflow-wrap: break-word;
       }
     }
   </style>
