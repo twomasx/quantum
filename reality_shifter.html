@@ -1,0 +1,1963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Q.U.A.N.T.U.M. - Reality Shifter</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="quantum_core.css">
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    :root {
+      --reality-gold: #ffd851;
+      --reality-purple: #9945ff;
+      --reality-teal: #00ffcc;
+      --reality-pink: #ff00aa;
+      --belief-red: #ff4444;
+      --belief-green: #44ff44;
+      --layer-opacity: 0.15;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Rajdhani', sans-serif;
+      background: var(--dark);
+      background-image: 
+        radial-gradient(ellipse at 20% 30%, rgba(153, 69, 255, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 70%, rgba(255, 216, 81, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(0, 255, 204, 0.1) 0%, transparent 70%);
+      color: var(--light);
+      min-height: 100vh;
+      line-height: 1.6;
+      overflow-x: hidden;
+      position: relative;
+    }
+    
+    .reality-grid {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 50px,
+        rgba(153, 69, 255, 0.03) 50px,
+        rgba(153, 69, 255, 0.03) 51px
+      ),
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 50px,
+        rgba(255, 216, 81, 0.03) 50px,
+        rgba(255, 216, 81, 0.03) 51px
+      );
+      pointer-events: none;
+      z-index: 1;
+      animation: reality-shift 10s linear infinite;
+    }
+    
+    @keyframes reality-shift {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(-10px, -10px) scale(1.02); }
+      100% { transform: translate(0, 0) scale(1); }
+    }
+    
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 0;
+      position: relative;
+      z-index: 10;
+    }
+    
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    
+    .logo {
+      color: var(--primary);
+      font-size: 1.5rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    
+    .logo:hover {
+      text-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+    }
+    
+    .billion-dollar-display {
+      background: linear-gradient(135deg, rgba(255, 216, 81, 0.2) 0%, rgba(153, 69, 255, 0.2) 100%);
+      padding: 0.5rem 1.5rem;
+      border-radius: 50px;
+      display: flex;
+      align-items: center;
+      font-size: 1rem;
+      font-family: 'Share Tech Mono', monospace;
+      color: var(--reality-gold);
+      text-shadow: 0 0 20px rgba(255, 216, 81, 0.8);
+      animation: billion-pulse 2s ease-in-out infinite;
+      border: 1px solid rgba(255, 216, 81, 0.3);
+    }
+    
+    @keyframes billion-pulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 216, 81, 0.4); }
+      50% { transform: scale(1.05); box-shadow: 0 0 40px rgba(255, 216, 81, 0.8); }
+    }
+    
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      background: linear-gradient(135deg, var(--reality-purple) 0%, var(--reality-gold) 50%, var(--reality-teal) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1rem;
+      font-size: 3rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      text-shadow: 0 0 30px rgba(153, 69, 255, 0.5);
+      text-align: center;
+    }
+    
+    .tagline {
+      text-align: center;
+      color: var(--reality-teal);
+      font-size: 1.2rem;
+      margin-bottom: 3rem;
+      font-style: italic;
+      opacity: 0.9;
+    }
+    
+    .game-container {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(153, 69, 255, 0.3);
+      border-radius: 20px;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+      min-height: 500px;
+    }
+    
+    .game-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--reality-purple), transparent);
+      animation: shimmer 3s linear infinite;
+    }
+    
+    .level-indicator {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    
+    .level-number {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.5rem;
+      color: var(--reality-purple);
+      text-shadow: 0 0 10px rgba(153, 69, 255, 0.8);
+    }
+    
+    .assumption-tokens {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: rgba(255, 216, 81, 0.1);
+      padding: 0.5rem 1rem;
+      border-radius: 50px;
+      border: 1px solid rgba(255, 216, 81, 0.3);
+    }
+    
+    .token-icon {
+      font-size: 1.5rem;
+      animation: float 3s ease-in-out infinite;
+    }
+    
+    .token-count {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--reality-gold);
+    }
+    
+    .reality-layers {
+      position: relative;
+      height: 500px;
+      margin-bottom: 2rem;
+      z-index: 1;
+      overflow: hidden;
+      border-radius: 20px;
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(153, 69, 255, 0.1) 50%, rgba(0, 0, 0, 0.8) 100%);
+      border: 2px solid rgba(153, 69, 255, 0.3);
+      box-shadow: 0 0 30px rgba(153, 69, 255, 0.2), inset 0 0 50px rgba(0, 0, 0, 0.5);
+    }
+    
+    .reality-layer {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border: 2px solid;
+      border-radius: 15px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      padding-top: 20px;
+      transition: all 0.5s ease;
+      overflow: hidden;
+      pointer-events: none; /* Let clicks pass through to SVG */
+    }
+    
+    .layer-active {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: var(--reality-teal);
+      box-shadow: 0 0 30px rgba(0, 255, 204, 0.6);
+    }
+    
+    .layer-belief {
+      background: rgba(255, 68, 68, var(--layer-opacity));
+      border-color: var(--belief-red);
+    }
+    
+    .layer-possibility {
+      background: rgba(68, 255, 68, var(--layer-opacity));
+      border-color: var(--belief-green);
+      display: none;
+    }
+    
+    .layer-transcended {
+      background: rgba(255, 216, 81, 0.1);
+      border-color: var(--reality-gold);
+      box-shadow: 0 0 50px rgba(255, 216, 81, 0.8);
+    }
+    
+    .belief-text {
+      font-size: 1.5rem;
+      text-align: center;
+      padding: 1rem;
+      color: var(--light);
+      max-width: 80%;
+      font-weight: 500;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+      margin-bottom: 20px;
+      pointer-events: none;
+    }
+    
+    .obstacle-node {
+      position: absolute;
+      min-width: 140px;
+      min-height: 80px;
+      padding: 15px;
+      background: #ff4444;
+      border: 3px solid #ff6666;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+      text-align: center;
+      font-weight: bold;
+      color: #ffffff;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+      max-width: 200px;
+      z-index: 10;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    
+    .obstacle-node:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+    }
+    
+    .obstacle-node.opportunity {
+      background: #44ff44;
+      border-color: #66ff66;
+      color: #000000;
+      text-shadow: none;
+    }
+    
+    .obstacle-tooltip {
+      position: absolute;
+      background: rgba(0, 0, 0, 0.9);
+      color: var(--light);
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%) translateY(-10px);
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      border: 1px solid var(--belief-red);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    }
+    
+    .obstacle:hover .obstacle-tooltip {
+      opacity: 1;
+    }
+    
+    .obstacle-tooltip::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 8px solid transparent;
+      border-top-color: rgba(0, 0, 0, 0.9);
+    }
+    
+    @keyframes obstacle-float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-10px) rotate(5deg); }
+    }
+    
+    .obstacle:hover {
+      transform: scale(1.1);
+      box-shadow: 0 10px 30px rgba(255, 68, 68, 0.6);
+    }
+    
+    .opportunity {
+      background: linear-gradient(135deg, var(--belief-green) 0%, rgba(68, 255, 68, 0.5) 100%);
+      box-shadow: 0 5px 20px rgba(68, 255, 68, 0.4);
+      animation: opportunity-pulse 2s ease-in-out infinite;
+      border: 2px solid var(--belief-green);
+    }
+    
+    @keyframes opportunity-pulse {
+      0%, 100% { 
+        transform: scale(1); 
+        box-shadow: 0 5px 20px rgba(68, 255, 68, 0.4);
+      }
+      50% { 
+        transform: scale(1.05); 
+        box-shadow: 0 10px 40px rgba(68, 255, 68, 0.8);
+      }
+    }
+    
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+    
+    .btn {
+      background: linear-gradient(135deg, var(--reality-purple) 0%, var(--reality-gold) 100%);
+      color: var(--dark);
+      border: none;
+      padding: 12px 30px;
+      border-radius: 50px;
+      font-weight: bold;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.9rem;
+      box-shadow: 0 4px 15px rgba(153, 69, 255, 0.3);
+    }
+    
+    .btn:hover {
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 6px 20px rgba(153, 69, 255, 0.4), 0 0 30px rgba(255, 216, 81, 0.3);
+    }
+    
+    .btn-assume {
+      background: linear-gradient(135deg, var(--reality-teal) 0%, var(--reality-purple) 100%);
+    }
+    
+    .btn-reset {
+      background: linear-gradient(135deg, var(--belief-red) 0%, var(--reality-pink) 100%);
+    }
+    
+    .stats-panel {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(153, 69, 255, 0.2);
+      border-radius: 15px;
+      padding: 1.5rem;
+      margin-top: 2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .stat-item {
+      text-align: center;
+    }
+    
+    .stat-label {
+      color: var(--reality-teal);
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 0.5rem;
+    }
+    
+    .stat-value {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 2rem;
+      color: var(--reality-gold);
+      text-shadow: 0 0 20px rgba(255, 216, 81, 0.6);
+    }
+    
+    .transformation-particles {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    
+    .particle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: var(--reality-gold);
+      border-radius: 50%;
+      opacity: 0;
+      animation: particle-burst 1s ease-out;
+    }
+    
+    @keyframes particle-burst {
+      0% {
+        transform: translate(0, 0) scale(0);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(var(--tx), var(--ty)) scale(2);
+        opacity: 0;
+      }
+    }
+    
+    .instructions {
+      background: rgba(153, 69, 255, 0.1);
+      border: 1px solid rgba(153, 69, 255, 0.3);
+      border-radius: 15px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+    
+    .instructions h3 {
+      color: var(--reality-purple);
+      margin-bottom: 1rem;
+      font-family: 'Orbitron', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .instructions ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    
+    .instructions li {
+      margin-bottom: 0.5rem;
+      padding-left: 1.5rem;
+      position: relative;
+    }
+    
+    .instructions li::before {
+      content: '▶';
+      position: absolute;
+      left: 0;
+      color: var(--reality-gold);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 0.5; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+    
+    .level-complete-modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(153, 69, 255, 0.2) 100%);
+      backdrop-filter: blur(20px);
+      border: 2px solid var(--reality-gold);
+      border-radius: 20px;
+      padding: 3rem;
+      text-align: center;
+      z-index: 1000;
+      transition: transform 0.5s ease;
+      box-shadow: 0 0 50px rgba(255, 216, 81, 0.8);
+    }
+    
+    .level-complete-modal.show {
+      transform: translate(-50%, -50%) scale(1);
+    }
+    
+    .modal-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2rem;
+      color: var(--reality-gold);
+      margin-bottom: 1rem;
+      text-shadow: 0 0 30px rgba(255, 216, 81, 0.8);
+    }
+    
+    .modal-message {
+      color: var(--reality-teal);
+      margin-bottom: 2rem;
+      font-size: 1.2rem;
+    }
+    
+    .reality-quote {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.8);
+      padding: 1rem 2rem;
+      border-radius: 50px;
+      border: 1px solid var(--reality-purple);
+      font-style: italic;
+      color: var(--reality-teal);
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      text-align: center;
+      max-width: 600px;
+      font-size: 0.9rem;
+      z-index: 100;
+    }
+    
+    .reality-quote.show {
+      opacity: 1;
+    }
+    
+    .visualization-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+      backdrop-filter: blur(10px);
+    }
+    
+    .visualization-modal.show {
+      display: flex;
+    }
+    
+    .visualization-content {
+      background: linear-gradient(135deg, rgba(153, 69, 255, 0.1) 0%, rgba(0, 0, 0, 0.8) 100%);
+      border: 2px solid var(--reality-purple);
+      border-radius: 20px;
+      padding: 3rem;
+      max-width: 600px;
+      width: 90%;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 0 50px rgba(153, 69, 255, 0.5);
+    }
+    
+    .visualization-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2rem;
+      color: var(--reality-teal);
+      margin-bottom: 2rem;
+      text-shadow: 0 0 20px rgba(0, 255, 204, 0.8);
+    }
+    
+    .limiting-belief {
+      background: rgba(255, 68, 68, 0.2);
+      border: 1px solid var(--belief-red);
+      padding: 1rem;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+      color: #ff9999;
+      font-weight: 500;
+    }
+    
+    .visualization-prompt {
+      color: var(--reality-teal);
+      font-size: 1.1rem;
+      line-height: 1.8;
+      margin: 2rem 0;
+      font-style: italic;
+    }
+    
+    .empowering-belief {
+      background: rgba(68, 255, 68, 0.2);
+      border: 1px solid var(--belief-green);
+      padding: 1rem;
+      border-radius: 10px;
+      margin-bottom: 2rem;
+      font-size: 1.1rem;
+      color: #99ff99;
+      font-weight: 500;
+    }
+    
+    .visualization-actions {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    
+    .btn-cancel {
+      background: linear-gradient(135deg, #666 0%, #444 100%);
+    }
+    
+    .btn-transform {
+      background: linear-gradient(135deg, var(--reality-teal) 0%, var(--reality-purple) 100%);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .container {
+        width: 95%;
+        padding: 1rem 0;
+        padding-bottom: 100px;
+      }
+      
+      .reality-layers {
+        height: 400px;
+        margin-bottom: 1rem;
+      }
+      
+      .belief-text {
+        font-size: 1rem;
+        padding: 0.5rem;
+        max-width: 90%;
+      }
+      
+      .controls {
+        gap: 0.5rem;
+      }
+      
+      .btn {
+        padding: 10px 20px;
+        font-size: 0.75rem;
+      }
+      
+      .billion-dollar-display {
+        font-size: 0.85rem;
+        padding: 0.4rem 0.8rem;
+      }
+      
+      .instructions {
+        padding: 1rem;
+        font-size: 0.85rem;
+      }
+      
+      .instructions ul {
+        padding-left: 0;
+      }
+      
+      .instructions li {
+        font-size: 0.8rem;
+        margin-bottom: 0.3rem;
+      }
+      
+      .game-container {
+        padding: 1rem;
+      }
+      
+      .level-indicator {
+        font-size: 0.85rem;
+      }
+      
+      .stats-panel {
+        gap: 0.5rem;
+        padding: 1rem;
+        margin-bottom: 60px;
+      }
+      
+      .stat-value {
+        font-size: 1.5rem;
+      }
+      
+      .reality-quote {
+        bottom: 10px;
+        font-size: 0.75rem;
+        padding: 0.5rem 1rem;
+        max-width: 90%;
+      }
+      
+      .tagline {
+        font-size: 1rem;
+        margin-bottom: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="reality-grid"></div>
+  
+  <div class="container">
+    <header>
+      <a href="index.html" class="logo">← Q.U.A.N.T.U.M.</a>
+      <div class="billion-dollar-display">💰 $1,000,000,000</div>
+    </header>
+    
+    <h1>Reality Shifter</h1>
+    <p class="tagline">Transform Your Assumptions, Transform Your Reality</p>
+    
+    <div class="instructions">
+      <h3>How to Play</h3>
+      <ul>
+        <li>Click red limiting beliefs to transform them into green empowering affirmations</li>
+        <li>Each transformation uses one assumption token (✨)</li>
+        <li>Build combos by transforming beliefs quickly - earn bonus tokens at 3x combo!</li>
+        <li>Use "Assume New Reality" to meditate and gain 1-2 extra tokens (once per level)</li>
+        <li>Transform ALL beliefs to complete the level - plan your token usage wisely!</li>
+        <li>Leftover tokens = bonus points! Try to complete levels efficiently</li>
+      </ul>
+    </div>
+    
+    <div class="game-container">
+      <div class="level-indicator">
+        <div class="level-number">Level <span id="currentLevel">1</span> of <span id="totalLevels">10</span></div>
+        <div class="assumption-tokens">
+          <span class="token-icon">✨</span>
+          <span class="token-count" id="tokenCount">3</span>
+        </div>
+      </div>
+      
+      <div class="progress-container" style="width: 100%; height: 10px; background: rgba(255,255,255,0.1); border-radius: 5px; margin-bottom: 1rem; overflow: hidden;">
+        <div id="progressBar" style="height: 100%; width: 0%; background: linear-gradient(90deg, #9945ff 0%, #ffd851 100%); transition: width 0.5s ease; box-shadow: 0 0 10px rgba(255, 216, 81, 0.6);"></div>
+      </div>
+      
+      <div class="reality-layers" id="realityLayers">
+        <div class="transformation-particles" id="particleContainer"></div>
+        <svg id="networkCanvas" width="100%" height="100%" style="position: absolute; top: 0; left: 0; z-index: 10; pointer-events: all;"></svg>
+        <div class="reality-layer layer-belief layer-active" id="beliefLayer">
+          <div class="belief-text" id="beliefText">I am limited by my circumstances</div>
+        </div>
+        <div class="reality-layer layer-possibility" id="possibilityLayer">
+          <div class="belief-text" id="possibilityText">I create my own opportunities</div>
+        </div>
+      </div>
+      
+      <div class="controls">
+        <button class="btn btn-assume" id="assumeBtn">Assume New Reality</button>
+        <button class="btn btn-reset" id="resetBtn">Reset Level</button>
+      </div>
+    </div>
+    
+    <div class="stats-panel">
+      <div class="stat-item">
+        <div class="stat-label">Transformations</div>
+        <div class="stat-value" id="transformCount">0</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">Reality Shifts</div>
+        <div class="stat-value" id="shiftCount">0</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">Master Score</div>
+        <div class="stat-value" id="masterScore">0</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">Combo</div>
+        <div class="stat-value" id="comboCount">0</div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="level-complete-modal" id="levelCompleteModal">
+    <h2 class="modal-title">Reality Transformed!</h2>
+    <p class="modal-message" id="modalMessage">You've successfully shifted your perspective!</p>
+    <button class="btn" id="nextLevelBtn">Next Level</button>
+  </div>
+  
+  <div class="reality-quote" id="realityQuote">
+    "Assumption is the mother of all possibilities" - The quantum field responds to your beliefs
+  </div>
+  
+  <div class="visualization-modal" id="visualizationModal">
+    <div class="visualization-content">
+      <h3 class="visualization-title">Pause & Visualize</h3>
+      <div class="limiting-belief" id="limitingBeliefDisplay"></div>
+      <p class="visualization-prompt" id="visualizationPrompt">
+        Close your eyes for a moment. Feel how this belief has limited you. 
+        Now imagine yourself free from this limitation. See yourself living 
+        as if the new belief were already true. Feel the emotions of that freedom.
+      </p>
+      <div class="empowering-belief" id="empoweringBeliefDisplay"></div>
+      <div class="visualization-actions">
+        <button class="btn btn-cancel" id="cancelTransform">Not Ready</button>
+        <button class="btn btn-transform" id="confirmTransform">I'm Ready to Transform</button>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Game state
+    let gameState = {
+      currentLevel: 1,
+      tokens: 3,
+      transformations: 0,
+      shifts: 0,
+      score: 0,
+      levelComplete: false,
+      combo: 0,
+      maxCombo: 0,
+      assumeUsed: false,
+      totalTransformed: 0
+    };
+    
+    // Level configurations with specific limiting beliefs
+    const levels = [
+      {
+        belief: "I am limited by my circumstances",
+        possibility: "I create my own opportunities",
+        obstacles: [
+          { limiting: "I don't have enough resources", empowering: "I attract all the resources I need" },
+          { limiting: "I'm stuck where I am", empowering: "I am free to create change" },
+          { limiting: "Nothing ever works out for me", empowering: "Everything works out for my highest good" }
+        ],
+        tokens: 3
+      },
+      {
+        belief: "Money is hard to come by",
+        possibility: "Abundance flows to me effortlessly",
+        obstacles: [
+          { limiting: "Money doesn't grow on trees", empowering: "Money flows to me from infinite sources" },
+          { limiting: "I have to work hard for every penny", empowering: "I receive money with ease and joy" },
+          { limiting: "There's never enough", empowering: "I live in infinite abundance" },
+          { limiting: "Rich people are greedy", empowering: "Wealth allows me to serve others" }
+        ],
+        tokens: 4
+      },
+      {
+        belief: "I need permission to succeed",
+        possibility: "I am the author of my own success",
+        obstacles: [
+          { limiting: "I need others' approval", empowering: "I approve of myself completely" },
+          { limiting: "Who am I to be successful?", empowering: "I am worthy of massive success" },
+          { limiting: "I might fail and disappoint people", empowering: "My success inspires others" },
+          { limiting: "I'm not qualified enough", empowering: "I have everything I need within me" }
+        ],
+        tokens: 3
+      },
+      {
+        belief: "The past defines my future",
+        possibility: "Every moment is a fresh start",
+        obstacles: [
+          { limiting: "I've always been this way", empowering: "I can reinvent myself at any moment" },
+          { limiting: "My past mistakes haunt me", empowering: "My past prepared me for greatness" },
+          { limiting: "It's too late to change", empowering: "Right now is the perfect time" },
+          { limiting: "History always repeats itself", empowering: "I write a new story every day" },
+          { limiting: "I'm damaged by what happened", empowering: "I am whole and complete" }
+        ],
+        tokens: 4
+      },
+      {
+        belief: "I must struggle to achieve",
+        possibility: "Success comes naturally to me",
+        obstacles: [
+          { limiting: "No pain, no gain", empowering: "I achieve with ease and grace" },
+          { limiting: "Life is meant to be hard", empowering: "Life flows effortlessly for me" },
+          { limiting: "Success requires sacrifice", empowering: "Success enhances every area of my life" },
+          { limiting: "I have to prove myself", empowering: "I am inherently valuable" },
+          { limiting: "Nothing good comes easy", empowering: "Good things come to me naturally" }
+        ],
+        tokens: 3
+      },
+      {
+        belief: "I am separate from my desires",
+        possibility: "I am one with infinite possibility",
+        obstacles: [
+          { limiting: "My dreams are unrealistic", empowering: "My dreams are my destiny" },
+          { limiting: "I want things I can't have", empowering: "Everything I desire is already mine" },
+          { limiting: "I'm not meant for that life", empowering: "I am meant for greatness" },
+          { limiting: "That's for other people", empowering: "I deserve the very best" },
+          { limiting: "I can only watch from afar", empowering: "I am living my dreams now" },
+          { limiting: "The universe doesn't care about me", empowering: "The universe conspires for my success" }
+        ],
+        tokens: 4
+      },
+      {
+        belief: "Reality is fixed and unchangeable",
+        possibility: "I am the conscious creator of reality",
+        obstacles: [
+          { limiting: "This is just how things are", empowering: "I shape reality with my thoughts" },
+          { limiting: "I have no control", empowering: "I am infinitely powerful" },
+          { limiting: "Facts are facts", empowering: "I create new facts every moment" },
+          { limiting: "I must accept what is", empowering: "I transform what is into what I desire" },
+          { limiting: "The world doesn't work that way", empowering: "I create how my world works" },
+          { limiting: "I'm at the mercy of circumstances", empowering: "Circumstances bend to my will" },
+          { limiting: "Reality is objective", empowering: "My consciousness shapes all reality" }
+        ],
+        tokens: 5
+      },
+      {
+        belief: "Success is for the lucky few",
+        possibility: "Success is my birthright",
+        obstacles: [
+          { limiting: "I wasn't born into wealth", empowering: "I create wealth from any starting point" },
+          { limiting: "Success is about who you know", empowering: "I attract the right connections naturally" },
+          { limiting: "The odds are against me", empowering: "The universe is rigged in my favor" },
+          { limiting: "Only special people succeed", empowering: "I am uniquely equipped for massive success" },
+          { limiting: "I missed my chance", empowering: "New opportunities appear daily" }
+        ],
+        tokens: 4
+      },
+      {
+        belief: "I must compete to win",
+        possibility: "Collaboration creates abundance for all",
+        obstacles: [
+          { limiting: "It's a dog-eat-dog world", empowering: "The world is abundant and supportive" },
+          { limiting: "Someone else's gain is my loss", empowering: "Others' success inspires my own" },
+          { limiting: "Resources are limited", empowering: "There's more than enough for everyone" },
+          { limiting: "I must fight for my share", empowering: "My share comes to me effortlessly" },
+          { limiting: "Trust leads to betrayal", empowering: "Trust creates miraculous partnerships" },
+          { limiting: "I work better alone", empowering: "Together we achieve the impossible" }
+        ],
+        tokens: 5
+      },
+      {
+        belief: "My worth is determined by others",
+        possibility: "I am inherently valuable and worthy",
+        obstacles: [
+          { limiting: "I need to prove myself", empowering: "My existence is proof enough" },
+          { limiting: "Achievement equals worth", empowering: "I am worthy simply by being" },
+          { limiting: "Others' opinions define me", empowering: "I define myself completely" },
+          { limiting: "I must earn love", empowering: "I am loved unconditionally" },
+          { limiting: "Rejection means I'm not good enough", empowering: "Rejection redirects me to something better" },
+          { limiting: "I need external validation", empowering: "I validate myself fully" },
+          { limiting: "Success will make me worthy", empowering: "My worth attracts success" }
+        ],
+        tokens: 5
+      }
+    ];
+    
+    // Inspirational quotes
+    const quotes = [
+      "Assumption is the mother of all possibilities",
+      "Your thoughts shape the quantum field",
+      "Reality bends to the will of consciousness",
+      "What you assume to be true becomes your reality",
+      "The observer effect: You create what you perceive",
+      "Limitations exist only in the mind that perceives them",
+      "Every belief is a choice, every choice shapes reality"
+    ];
+    
+    // DOM elements
+    const currentLevelEl = document.getElementById('currentLevel');
+    const totalLevelsEl = document.getElementById('totalLevels');
+    const tokenCountEl = document.getElementById('tokenCount');
+    const beliefTextEl = document.getElementById('beliefText');
+    const beliefLayerEl = document.getElementById('beliefLayer');
+    const possibilityLayerEl = document.getElementById('possibilityLayer');
+    const assumeBtnEl = document.getElementById('assumeBtn');
+    const resetBtnEl = document.getElementById('resetBtn');
+    const transformCountEl = document.getElementById('transformCount');
+    const shiftCountEl = document.getElementById('shiftCount');
+    const masterScoreEl = document.getElementById('masterScore');
+    const comboCountEl = document.getElementById('comboCount');
+    const levelCompleteModalEl = document.getElementById('levelCompleteModal');
+    const modalMessageEl = document.getElementById('modalMessage');
+    const nextLevelBtnEl = document.getElementById('nextLevelBtn');
+    const realityQuoteEl = document.getElementById('realityQuote');
+    const particleContainerEl = document.getElementById('particleContainer');
+    
+    // Set total levels
+    totalLevelsEl.textContent = levels.length;
+    
+    // Initialize game
+    function initLevel() {
+      const level = levels[gameState.currentLevel - 1];
+      gameState.tokens = level.tokens;
+      gameState.levelComplete = false;
+      gameState.combo = 0;
+      gameState.assumeUsed = false;
+      gameState.totalTransformed = 0;
+      
+      // Update UI
+      currentLevelEl.textContent = gameState.currentLevel;
+      tokenCountEl.textContent = gameState.tokens;
+      beliefTextEl.textContent = level.belief;
+      document.getElementById('possibilityText').textContent = level.possibility;
+      comboCountEl.textContent = '0x';
+      
+      // Reset layers
+      beliefLayerEl.style.display = 'flex'; // Make sure belief layer is visible
+      beliefLayerEl.classList.add('layer-active');
+      possibilityLayerEl.classList.remove('layer-active');
+      possibilityLayerEl.style.display = 'none';
+      
+      // Update assume button text
+      assumeBtnEl.textContent = 'Assume New Reality';
+      assumeBtnEl.disabled = false;
+      
+      // Clear and create obstacles
+      clearObstacles();
+      createObstacles(level.obstacles);
+      
+      // Show quote
+      showRandomQuote();
+    }
+    
+    // Network visualization variables
+    let svg, simulation, nodes, links, nodeElements, linkElements;
+    
+    // Clear obstacles
+    function clearObstacles() {
+      if (svg) {
+        svg.selectAll('*').remove();
+      }
+    }
+    
+    // Create digital network visualization with COOL animations
+    function createObstacles(levelObstacles) {
+      const container = document.getElementById('realityLayers');
+      const width = container.offsetWidth;
+      const height = container.offsetHeight;
+      const isMobile = window.innerWidth < 768;
+      
+      // Create nodes with responsive positioning
+      nodes = levelObstacles.map((belief, i) => {
+        // Mobile: 2 columns, Desktop: 3 columns
+        const cols = isMobile ? 2 : 3;
+        const rows = Math.ceil(levelObstacles.length / cols);
+        const col = i % cols;
+        const row = Math.floor(i / cols);
+        
+        // Responsive spacing with padding
+        const paddingX = isMobile ? 15 : 100;
+        const paddingY = isMobile ? 60 : 80;
+        const cellWidth = (width - paddingX * 2) / cols;
+        const cellHeight = (height - paddingY * 2) / rows;
+        
+        // Center nodes in each cell
+        const xBase = paddingX + cellWidth * col + cellWidth / 2;
+        const yBase = paddingY + cellHeight * row + cellHeight / 2;
+        
+        // Small random offset for organic feel
+        const xOffset = (Math.random() - 0.5) * (isMobile ? 10 : 20);
+        const yOffset = (Math.random() - 0.5) * (isMobile ? 10 : 20);
+        
+        return {
+          id: i,
+          limiting: belief.limiting,
+          empowering: belief.empowering,
+          transformed: false,
+          x: xBase + xOffset,
+          y: yBase + yOffset,
+          originalX: xBase + xOffset,
+          originalY: yBase + yOffset
+        };
+      });
+      
+      // Simple links between adjacent nodes
+      links = [];
+      for (let i = 0; i < nodes.length - 1; i++) {
+        links.push({ source: i, target: i + 1 });
+      }
+      
+      // Setup SVG
+      svg = d3.select('#networkCanvas');
+      svg.selectAll('*').remove();
+      
+      // Create defs for gradients and filters
+      const defs = svg.append('defs');
+      
+      // Create animated gradient for links
+      const linkGradient = defs.append('linearGradient')
+        .attr('id', 'link-gradient')
+        .attr('gradientUnits', 'userSpaceOnUse');
+      
+      linkGradient.append('stop')
+        .attr('offset', '0%')
+        .attr('stop-color', '#9945ff')
+        .attr('stop-opacity', 0);
+      
+      linkGradient.append('stop')
+        .attr('offset', '50%')
+        .attr('stop-color', '#9945ff')
+        .attr('stop-opacity', 0.6);
+      
+      linkGradient.append('stop')
+        .attr('offset', '100%')
+        .attr('stop-color', '#9945ff')
+        .attr('stop-opacity', 0);
+      
+      // Create glow filter
+      const glow = defs.append('filter')
+        .attr('id', 'glow')
+        .attr('x', '-50%')
+        .attr('y', '-50%')
+        .attr('width', '200%')
+        .attr('height', '200%');
+      
+      glow.append('feGaussianBlur')
+        .attr('stdDeviation', '4')
+        .attr('result', 'coloredBlur');
+      
+      const feMerge = glow.append('feMerge');
+      feMerge.append('feMergeNode').attr('in', 'coloredBlur');
+      feMerge.append('feMergeNode').attr('in', 'SourceGraphic');
+      
+      // Create animated connecting lines
+      linkElements = svg.append('g')
+        .selectAll('line')
+        .data(links)
+        .enter().append('line')
+        .attr('stroke', '#9945ff')
+        .attr('stroke-width', 2)
+        .attr('stroke-opacity', 0)
+        .style('filter', 'url(#glow)');
+      
+      // Create node groups
+      const nodeGroup = svg.append('g');
+      nodeElements = nodeGroup.selectAll('g')
+        .data(nodes)
+        .enter().append('g')
+        .attr('cursor', 'pointer')
+        .attr('transform', d => `translate(${d.x},${d.y})`)
+        .style('pointer-events', 'all'); // Ensure clicks work
+      
+      // Responsive sizing
+      const nodeWidth = isMobile ? 140 : 180;
+      const nodeHeight = isMobile ? 60 : 70;
+      
+      // Add outer glow circle
+      nodeElements.append('circle')
+        .attr('r', 0)
+        .attr('fill', 'none')
+        .attr('stroke', d => d.transformed ? '#44ff44' : '#ff4444')
+        .attr('stroke-width', 2)
+        .attr('stroke-opacity', 0.5)
+        .style('filter', 'url(#glow)')
+        .transition()
+        .duration(1000)
+        .delay((d, i) => i * 100)
+        .attr('r', nodeHeight);
+      
+      // Add background rectangle with entrance animation
+      nodeElements.append('rect')
+        .attr('x', -nodeWidth/2)
+        .attr('y', -nodeHeight/2)
+        .attr('width', nodeWidth)
+        .attr('height', nodeHeight)
+        .attr('rx', 15)
+        .attr('fill', d => d.transformed ? '#22aa22' : '#cc2222')
+        .attr('stroke', d => d.transformed ? '#44ff44' : '#ff4444')
+        .attr('stroke-width', 3)
+        .attr('opacity', 0)
+        .attr('transform', 'scale(0)')
+        .transition()
+        .duration(800)
+        .delay((d, i) => i * 50)
+        .attr('opacity', 0.9)
+        .attr('transform', 'scale(1)');
+      
+      // Add clear, readable text with proper wrapping
+      nodeElements.each(function(d) {
+        const group = d3.select(this);
+        const text = d.transformed ? d.empowering : d.limiting;
+        const words = text.split(' ');
+        const lineHeight = 18;
+        let line = [];
+        let lineNumber = 0;
+        const maxWidth = 160;
+        
+        // Create a temporary text element to measure text width
+        const fontSize = isMobile ? '14px' : '16px';
+        const tempText = group.append('text')
+          .style('visibility', 'hidden')
+          .attr('font-size', fontSize)
+          .attr('font-weight', 'bold')
+          .attr('font-family', 'Arial, sans-serif');
+        
+        // Word wrap logic
+        const lines = [];
+        words.forEach(word => {
+          line.push(word);
+          tempText.text(line.join(' '));
+          if (tempText.node().getComputedTextLength() > maxWidth && line.length > 1) {
+            line.pop();
+            lines.push(line.join(' '));
+            line = [word];
+          }
+        });
+        if (line.length > 0) {
+          lines.push(line.join(' '));
+        }
+        
+        // Remove temp text
+        tempText.remove();
+        
+        // Add actual text lines
+        const textGroup = group.append('g');
+        const totalHeight = lines.length * lineHeight;
+        const startY = -totalHeight / 2 + lineHeight / 2;
+        
+        lines.forEach((textLine, i) => {
+          // Add shadow text for depth
+          textGroup.append('text')
+            .attr('x', 0)
+            .attr('y', startY + i * lineHeight + 1)
+            .attr('text-anchor', 'middle')
+            .attr('fill', '#000000')
+            .attr('fill-opacity', 0.8)
+            .attr('font-size', fontSize)
+            .attr('font-weight', 'bold')
+            .attr('font-family', 'Orbitron, sans-serif')
+            .style('pointer-events', 'none')
+            .text(textLine);
+            
+          // Add main text with gradient
+          const mainText = textGroup.append('text')
+            .attr('x', 0)
+            .attr('y', startY + i * lineHeight)
+            .attr('text-anchor', 'middle')
+            .attr('fill', '#ffffff')
+            .attr('font-size', fontSize)
+            .attr('font-weight', '700')
+            .attr('font-family', 'Orbitron, sans-serif')
+            .attr('letter-spacing', '0.5px')
+            .style('text-shadow', '0 0 10px rgba(255,255,255,0.5)')
+            .style('pointer-events', 'none')
+            .text(textLine);
+        });
+      });
+      
+      // Add click handler to the entire group
+      nodeElements.on('click', function(event, d) {
+        event.stopPropagation();
+        event.preventDefault();
+        
+        // Debug logs
+        console.log('=== Node Click Debug ===');
+        console.log('Node ID:', d.id);
+        console.log('Node Text:', d.limiting);
+        console.log('Is Transformed:', d.transformed);
+        console.log('Current Token Count:', gameState.tokens);
+        console.log('Level Complete:', gameState.levelComplete);
+        console.log('All conditions met:', !d.transformed && gameState.tokens > 0 && !gameState.levelComplete);
+        console.log('Current Obstacle:', currentObstacle);
+        console.log('Game State:', JSON.parse(JSON.stringify(gameState)));
+        console.log('Node Data:', JSON.parse(JSON.stringify(d)));
+        console.log('All Nodes Status:', nodes.map(n => ({
+          id: n.id,
+          transformed: n.transformed,
+          text: n.limiting.substring(0, 20) + '...'
+        })));
+        console.log('======================');
+        
+        if (!d.transformed && gameState.tokens > 0 && !gameState.levelComplete) {
+          console.log('>>> Opening visualization modal for node', d.id);
+          currentObstacle = d;
+          showVisualizationModal(d.limiting, d.empowering);
+        } else {
+          console.log('>>> Click blocked - Conditions not met');
+          if (d.transformed) console.log('   - Node already transformed');
+          if (gameState.tokens <= 0) console.log('   - No tokens remaining');
+          if (gameState.levelComplete) console.log('   - Level already complete');
+        }
+      })
+      .on('touchstart', function(event, d) {
+        // Mobile touch support
+        event.stopPropagation();
+        event.preventDefault();
+        
+        console.log('=== Touch Event Debug ===');
+        console.log('Touch on node:', d.id);
+        console.log('Node transformed:', d.transformed);
+        console.log('Tokens:', gameState.tokens);
+        console.log('Level complete:', gameState.levelComplete);
+        console.log('========================');
+        
+        if (!d.transformed && gameState.tokens > 0 && !gameState.levelComplete) {
+          console.log('>>> Touch: Opening modal for node', d.id);
+          currentObstacle = d;
+          showVisualizationModal(d.limiting, d.empowering);
+        } else {
+          console.log('>>> Touch blocked - Conditions not met');
+        }
+      });
+      
+      // Animate links
+      linkElements
+        .attr('x1', d => nodes[d.source].x)
+        .attr('y1', d => nodes[d.source].y)
+        .attr('x2', d => nodes[d.source].x)
+        .attr('y2', d => nodes[d.source].y)
+        .transition()
+        .duration(1000)
+        .delay((d, i) => i * 100)
+        .attr('x2', d => nodes[d.target].x)
+        .attr('y2', d => nodes[d.target].y)
+        .attr('stroke-opacity', 0.3);
+      
+      // Add pulsing animation to links
+      function pulsateLinks() {
+        linkElements
+          .transition()
+          .duration(2000)
+          .attr('stroke-opacity', 0.6)
+          .attr('stroke-width', 3)
+          .transition()
+          .duration(2000)
+          .attr('stroke-opacity', 0.3)
+          .attr('stroke-width', 2)
+          .on('end', pulsateLinks);
+      }
+      setTimeout(pulsateLinks, 1500);
+      
+      // Add floating animation to nodes
+      nodeElements.each(function(d, i) {
+        const node = d3.select(this);
+        const delay = i * 200;
+        
+        function float() {
+          node.transition()
+            .duration(3000 + Math.random() * 1000)
+            .delay(delay)
+            .ease(d3.easeSinInOut)
+            .attr('transform', `translate(${d.x},${d.y - 5})`)
+            .transition()
+            .duration(3000 + Math.random() * 1000)
+            .ease(d3.easeSinInOut)
+            .attr('transform', `translate(${d.x},${d.y + 5})`)
+            .on('end', float);
+        }
+        
+        setTimeout(float, 1000);
+      });
+      
+      // Add hover effect for desktop
+      nodeElements.on('mouseenter', function(event, d) {
+        if (!d.transformed && gameState.tokens > 0 && !gameState.levelComplete) {
+          const selection = d3.select(this);
+          
+          // Scale up the node
+          selection.select('rect')
+            .transition()
+            .duration(200)
+            .attr('transform', 'scale(1.1)');
+          
+          // Brighten the glow
+          selection.select('circle')
+            .transition()
+            .duration(200)
+            .attr('opacity', 1)
+            .attr('stroke-width', 4);
+        }
+      })
+      .on('mouseleave', function(event, d) {
+        const selection = d3.select(this);
+        
+        selection.select('rect')
+          .transition()
+          .duration(200)
+          .attr('transform', 'scale(1)');
+          
+        selection.select('circle')
+          .transition()
+          .duration(200)
+          .attr('stroke-opacity', 0.5)
+          .attr('stroke-width', 2);
+      });
+      
+      // Update link positions
+      linkElements
+        .attr('x1', d => nodes[d.source].x)
+        .attr('y1', d => nodes[d.source].y)
+        .attr('x2', d => nodes[d.target].x)
+        .attr('y2', d => nodes[d.target].y);
+      
+      // No complex animations or force simulations - keep it simple and stable
+      simulation = null;
+    }
+    
+    
+    // Current obstacle being transformed
+    let currentObstacle = null;
+    let comboTimer = null;
+    
+    
+    // Visualization prompts for each level
+    const visualizationPrompts = [
+      "Take a deep breath. Feel the weight of these circumstances. Now visualize yourself as the creator of opportunities. See doors opening, resources flowing, and everything working in your favor.",
+      "Notice how scarcity feels in your body. Now breathe in abundance. Visualize money flowing to you like a river, effortlessly and joyfully. See yourself generous and prosperous.",
+      "Feel the need for approval dissolving. Visualize yourself standing tall, self-authorized, making bold decisions. See others inspired by your confidence and leadership.",
+      "Release the chains of the past. Visualize yourself reborn in this moment, free to create any future. See yourself writing a new story filled with possibility.",
+      "Let go of struggle. Visualize success flowing to you naturally, like breathing. See yourself achieving with grace, ease, and joy.",
+      "Feel the separation dissolve. Visualize yourself merged with your desires, already living your dreams. See and feel yourself as one with infinite possibility.",
+      "Release the illusion of fixed reality. Visualize yourself as the conscious creator, bending reality with your thoughts. See the world reshaping itself to match your vision.",
+      "Release the lottery mentality. Visualize success as your natural state, your birthright. See yourself among the successful, belonging there completely.",
+      "Let competition dissolve into collaboration. Visualize a world of infinite abundance where everyone wins. See yourself in joyful partnership with others.",
+      "Feel your inherent worth glowing within. Visualize yourself valuable beyond measure, loved unconditionally. See success attracted to your authentic self."
+    ];
+    
+    // Show visualization modal
+    function showVisualizationModal(limiting, empowering) {
+      const modalEl = document.getElementById('visualizationModal');
+      const limitingEl = document.getElementById('limitingBeliefDisplay');
+      const empoweringEl = document.getElementById('empoweringBeliefDisplay');
+      const promptEl = document.getElementById('visualizationPrompt');
+      
+      limitingEl.textContent = `"${limiting}"`;
+      empoweringEl.textContent = `"${empowering}"`;
+      
+      // Use level-specific prompt
+      const promptIndex = Math.min(gameState.currentLevel - 1, visualizationPrompts.length - 1);
+      promptEl.textContent = visualizationPrompts[promptIndex];
+      
+      modalEl.classList.add('show');
+    }
+    
+    // Complete transformation
+    function completeTransformation() {
+      if (!currentObstacle) return;
+      
+      console.log('=== Complete Transformation Debug ===');
+      console.log('Transforming node:', currentObstacle.id);
+      console.log('Before - Tokens:', gameState.tokens);
+      console.log('Before - Node transformed:', currentObstacle.transformed);
+      
+      gameState.tokens--;
+      gameState.transformations++;
+      gameState.totalTransformed++;
+      tokenCountEl.textContent = gameState.tokens;
+      transformCountEl.textContent = gameState.transformations;
+      
+      // Update combo
+      clearTimeout(comboTimer);
+      gameState.combo++;
+      if (gameState.combo > gameState.maxCombo) {
+        gameState.maxCombo = gameState.combo;
+      }
+      comboCountEl.textContent = gameState.combo + 'x';
+      
+      // Combo bonus: At 3x combo, earn a bonus token!
+      if (gameState.combo === 3) {
+        gameState.tokens++;
+        tokenCountEl.textContent = gameState.tokens;
+        createBonusTokenEffect();
+        showRandomQuote();
+      }
+      
+      // Reset combo after 3 seconds
+      comboTimer = setTimeout(() => {
+        gameState.combo = 0;
+        comboCountEl.textContent = '0x';
+      }, 3000);
+      
+      // Mark as transformed
+      currentObstacle.transformed = true;
+      
+      console.log('After - Tokens:', gameState.tokens);
+      console.log('After - Node transformed:', currentObstacle.transformed);
+      console.log('After - Transformations count:', gameState.transformations);
+      console.log('====================================');
+      
+      // Update the node visually
+      const nodeSelection = nodeElements.filter(d => d.id === currentObstacle.id);
+      
+      // Animate transformation - update rectangle background
+      nodeSelection.select('rect')
+        .transition()
+        .duration(500)
+        .attr('fill', '#22aa22')
+        .attr('stroke', '#44ff44')
+        .attr('stroke-width', 5)
+        .transition()
+        .duration(500)
+        .attr('stroke-width', 3);
+      
+      // Update glow circle color
+      nodeSelection.select('circle')
+        .transition()
+        .duration(500)
+        .attr('stroke', '#44ff44');
+      
+      // Clear old text and add new text with word wrapping
+      nodeSelection.selectAll('text').remove();
+      
+      const group = nodeSelection;
+      const text = currentObstacle.empowering;
+      const words = text.split(' ');
+      const lineHeight = 18;
+      let line = [];
+      const maxWidth = 160;
+      const fontSize = window.innerWidth < 768 ? '14px' : '16px';
+      
+      // Create temporary text for measuring
+      const tempText = group.append('text')
+        .style('visibility', 'hidden')
+        .attr('font-size', fontSize)
+        .attr('font-weight', 'bold')
+        .attr('font-family', 'Orbitron, sans-serif');
+      
+      // Word wrap logic
+      const lines = [];
+      words.forEach(word => {
+        line.push(word);
+        tempText.text(line.join(' '));
+        if (tempText.node().getComputedTextLength() > maxWidth && line.length > 1) {
+          line.pop();
+          lines.push(line.join(' '));
+          line = [word];
+        }
+      });
+      if (line.length > 0) {
+        lines.push(line.join(' '));
+      }
+      
+      // Remove temp text
+      tempText.remove();
+      
+      // Add new text lines with fade-in effect
+      const textGroup = group.append('g').style('opacity', 0);
+      const totalHeight = lines.length * lineHeight;
+      const startY = -totalHeight / 2 + lineHeight / 2;
+      
+      lines.forEach((textLine, i) => {
+        // Add shadow text for depth
+        textGroup.append('text')
+          .attr('x', 0)
+          .attr('y', startY + i * lineHeight + 1)
+          .attr('text-anchor', 'middle')
+          .attr('fill', '#000000')
+          .attr('fill-opacity', 0.8)
+          .attr('font-size', fontSize)
+          .attr('font-weight', 'bold')
+          .attr('font-family', 'Orbitron, sans-serif')
+          .style('pointer-events', 'none')
+          .text(textLine);
+          
+        // Add main text
+        textGroup.append('text')
+          .attr('x', 0)
+          .attr('y', startY + i * lineHeight)
+          .attr('text-anchor', 'middle')
+          .attr('fill', '#ffffff')
+          .attr('font-size', fontSize)
+          .attr('font-weight', '700')
+          .attr('font-family', 'Orbitron, sans-serif')
+          .attr('letter-spacing', '0.5px')
+          .style('text-shadow', '0 0 10px rgba(255,255,255,0.5)')
+          .style('pointer-events', 'none')
+          .text(textLine);
+      });
+      
+      // Fade in new text
+      textGroup.transition()
+        .duration(500)
+        .style('opacity', 1);
+      
+      // Create particle effect
+      createD3Particles(currentObstacle);
+      
+      // Hide modal
+      document.getElementById('visualizationModal').classList.remove('show');
+      currentObstacle = null;
+      
+      // Update progress bar
+      const totalNodes = nodes.length;
+      const transformedNodes = nodes.filter(n => n.transformed).length;
+      const progress = (transformedNodes / totalNodes) * 100;
+      document.getElementById('progressBar').style.width = progress + '%';
+      
+      // Check if all obstacles transformed
+      checkLevelComplete();
+      
+      // Update score with combo bonus
+      const comboBonus = gameState.combo > 1 ? gameState.combo * 10 : 0;
+      updateScore(100 + comboBonus);
+      
+      // Show encouraging message
+      if (gameState.combo > 1) {
+        realityQuoteEl.textContent = `${gameState.combo}x Combo! Keep the momentum going!`;
+        realityQuoteEl.classList.add('show');
+        setTimeout(() => {
+          realityQuoteEl.classList.remove('show');
+        }, 2000);
+      } else {
+        showRandomQuote();
+      }
+    }
+    
+    // Create D3 particle effect
+    function createD3Particles(node) {
+      const particleCount = 12;
+      const particles = [];
+      
+      // Create simple star burst pattern
+      for (let i = 0; i < particleCount; i++) {
+        const angle = (Math.PI * 2 * i) / particleCount;
+        const velocity = 40 + Math.random() * 30;
+        particles.push({
+          x: node.x,
+          y: node.y,
+          vx: Math.cos(angle) * velocity,
+          vy: Math.sin(angle) * velocity,
+          size: 4
+        });
+      }
+      
+      const particleGroup = svg.append('g').attr('class', 'particles');
+      
+      // Create simple circles without complex filters
+      const particleSelection = particleGroup.selectAll('circle')
+        .data(particles)
+        .enter().append('circle')
+        .attr('cx', d => d.x)
+        .attr('cy', d => d.y)
+        .attr('r', d => d.size)
+        .attr('fill', '#ffd851')
+        .attr('opacity', 1);
+      
+      // Simple animation
+      particleSelection.transition()
+        .duration(1000)
+        .ease(d3.easeExpOut)
+        .attr('cx', d => d.x + d.vx)
+        .attr('cy', d => d.y + d.vy)
+        .attr('r', 1)
+        .attr('opacity', 0)
+        .remove()
+        .on('end', function() {
+          if (particleGroup.selectAll('circle').size() === 0) {
+            particleGroup.remove();
+          }
+        });
+    }
+    
+    // Check level complete
+    function checkLevelComplete() {
+      const allTransformed = nodes.every(node => node.transformed);
+      
+      console.log('=== Check Level Complete Debug ===');
+      console.log('All nodes transformed:', allTransformed);
+      console.log('Individual node status:', nodes.map(n => ({
+        id: n.id,
+        transformed: n.transformed
+      })));
+      console.log('Total nodes:', nodes.length);
+      console.log('Transformed nodes:', nodes.filter(n => n.transformed).length);
+      console.log('==================================');
+      
+      if (allTransformed) {
+        console.log('>>> LEVEL COMPLETE! Setting levelComplete to true');
+        gameState.levelComplete = true;
+        gameState.shifts++;
+        shiftCountEl.textContent = gameState.shifts;
+        
+        // Show possibility layer
+        setTimeout(() => {
+          beliefLayerEl.classList.remove('layer-active');
+          beliefLayerEl.style.display = 'none'; // Hide the belief layer
+          possibilityLayerEl.style.display = 'flex';
+          setTimeout(() => {
+            possibilityLayerEl.classList.add('layer-active');
+            document.getElementById('possibilityText').textContent = 
+              levels[gameState.currentLevel - 1].possibility;
+          }, 100);
+        }, 500);
+        
+        // Show completion modal
+        setTimeout(() => {
+          showLevelComplete();
+        }, 2000);
+      }
+    }
+    
+    // Show level complete
+    function showLevelComplete() {
+      const bonusPoints = gameState.tokens * 50;
+      updateScore(bonusPoints);
+      
+      modalMessageEl.textContent = `You've successfully shifted your perspective! Bonus: ${bonusPoints} points for ${gameState.tokens} tokens remaining.`;
+      levelCompleteModalEl.classList.add('show');
+    }
+    
+    // Update score
+    function updateScore(points) {
+      gameState.score += points;
+      masterScoreEl.textContent = gameState.score;
+    }
+    
+    // Show random quote
+    function showRandomQuote() {
+      const quote = quotes[Math.floor(Math.random() * quotes.length)];
+      realityQuoteEl.textContent = quote;
+      realityQuoteEl.classList.add('show');
+      
+      setTimeout(() => {
+        realityQuoteEl.classList.remove('show');
+      }, 5000);
+    }
+    
+    // Create bonus token effect
+    function createBonusTokenEffect() {
+      const tokenIcon = document.querySelector('.token-icon');
+      const rect = tokenIcon.getBoundingClientRect();
+      
+      const bonus = document.createElement('div');
+      bonus.textContent = '+1 ✨';
+      bonus.style.position = 'fixed';
+      bonus.style.left = rect.left + 'px';
+      bonus.style.top = rect.top + 'px';
+      bonus.style.color = '#ffd851';
+      bonus.style.fontSize = '2rem';
+      bonus.style.fontWeight = 'bold';
+      bonus.style.zIndex = '9999';
+      bonus.style.animation = 'float-up 2s ease-out';
+      document.body.appendChild(bonus);
+      
+      setTimeout(() => bonus.remove(), 2000);
+    }
+    
+    // Add float-up animation
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes float-up {
+        0% { transform: translateY(0); opacity: 1; }
+        100% { transform: translateY(-50px); opacity: 0; }
+      }
+    `;
+    document.head.appendChild(style);
+    
+    // Assume new reality - now grants tokens!
+    assumeBtnEl.addEventListener('click', () => {
+      if (!gameState.levelComplete && !gameState.assumeUsed) {
+        // Mark as used
+        gameState.assumeUsed = true;
+        assumeBtnEl.textContent = 'Reality Shifted!';
+        assumeBtnEl.disabled = true;
+        
+        // Grant 1-2 bonus tokens
+        const bonusTokens = Math.random() > 0.5 ? 2 : 1;
+        gameState.tokens += bonusTokens;
+        tokenCountEl.textContent = gameState.tokens;
+        
+        // Visual effect
+        for (let i = 0; i < bonusTokens; i++) {
+          setTimeout(() => createBonusTokenEffect(), i * 300);
+        }
+        
+        // Reality shift effect
+        beliefLayerEl.style.filter = 'hue-rotate(180deg)';
+        setTimeout(() => {
+          beliefLayerEl.style.filter = '';
+        }, 1000);
+        
+        // Show special meditation quote
+        realityQuoteEl.textContent = bonusTokens === 2 ? 
+          "Deep meditation achieved! Your consciousness expands (+2 tokens)" : 
+          "Reality shifts to your will (+1 token)";
+        realityQuoteEl.classList.add('show');
+        setTimeout(() => {
+          realityQuoteEl.classList.remove('show');
+        }, 5000);
+        
+        // Score bonus
+        updateScore(50);
+        gameState.shifts++;
+        shiftCountEl.textContent = gameState.shifts;
+      }
+    });
+    
+    // Reset level
+    resetBtnEl.addEventListener('click', () => {
+      initLevel();
+    });
+    
+    // Next level
+    nextLevelBtnEl.addEventListener('click', () => {
+      levelCompleteModalEl.classList.remove('show');
+      
+      if (gameState.currentLevel < levels.length) {
+        gameState.currentLevel++;
+        initLevel();
+      } else {
+        // Game complete
+        modalMessageEl.textContent = `Congratulations! You've mastered all reality shifts! Final Score: ${gameState.score}`;
+        nextLevelBtnEl.textContent = 'Play Again';
+        nextLevelBtnEl.onclick = () => {
+          gameState = {
+            currentLevel: 1,
+            tokens: 3,
+            transformations: 0,
+            shifts: 0,
+            score: 0,
+            levelComplete: false
+          };
+          levelCompleteModalEl.classList.remove('show');
+          nextLevelBtnEl.textContent = 'Next Level';
+          initLevel();
+        };
+        levelCompleteModalEl.classList.add('show');
+      }
+    });
+    
+    // Initialize the game
+    initLevel();
+    
+    
+    // Visualization modal event listeners
+    document.getElementById('confirmTransform').addEventListener('click', completeTransformation);
+    document.getElementById('cancelTransform').addEventListener('click', () => {
+      document.getElementById('visualizationModal').classList.remove('show');
+      currentObstacle = null;
+    });
+    
+    // Add keyboard controls
+    document.addEventListener('keydown', (e) => {
+      if (e.key === ' ' && !gameState.levelComplete) {
+        e.preventDefault();
+        assumeBtnEl.click();
+      } else if (e.key === 'r' || e.key === 'R') {
+        resetBtnEl.click();
+      }
+    });
+    
+    // Periodic reality glitches
+    setInterval(() => {
+      if (Math.random() < 0.1) {
+        document.querySelector('.reality-grid').style.opacity = '0.5';
+        setTimeout(() => {
+          document.querySelector('.reality-grid').style.opacity = '1';
+        }, 200);
+      }
+    }, 5000);
+    
+    // Handle window resize
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        // Recalculate positions and update the visualization
+        if (nodes && nodes.length > 0) {
+          // Store current transformation states
+          const transformedStates = nodes.map(n => n.transformed);
+          
+          clearObstacles();
+          createObstacles(levels[gameState.currentLevel - 1].obstacles);
+          
+          // Restore transformation states
+          nodes.forEach((node, i) => {
+            node.transformed = transformedStates[i];
+            if (node.transformed) {
+              // Update visual state for transformed nodes
+              const nodeSelection = nodeElements.filter(d => d.id === node.id);
+              nodeSelection.select('rect')
+                .attr('fill', '#22aa22')
+                .attr('stroke', '#44ff44');
+              nodeSelection.select('circle')
+                .attr('stroke', '#44ff44');
+              
+              // Update text to empowering version
+              nodeSelection.selectAll('text').remove();
+              
+              const group = nodeSelection;
+              const text = node.empowering;
+              const words = text.split(' ');
+              const lineHeight = 18;
+              let line = [];
+              const maxWidth = 160;
+              const fontSize = window.innerWidth < 768 ? '14px' : '16px';
+              
+              // Create temporary text for measuring
+              const tempText = group.append('text')
+                .style('visibility', 'hidden')
+                .attr('font-size', fontSize)
+                .attr('font-weight', 'bold')
+                .attr('font-family', 'Orbitron, sans-serif');
+              
+              // Word wrap logic
+              const lines = [];
+              words.forEach(word => {
+                line.push(word);
+                tempText.text(line.join(' '));
+                if (tempText.node().getComputedTextLength() > maxWidth && line.length > 1) {
+                  line.pop();
+                  lines.push(line.join(' '));
+                  line = [word];
+                }
+              });
+              if (line.length > 0) {
+                lines.push(line.join(' '));
+              }
+              
+              // Remove temp text
+              tempText.remove();
+              
+              // Add new text lines
+              const textGroup = group.append('g');
+              const totalHeight = lines.length * lineHeight;
+              const startY = -totalHeight / 2 + lineHeight / 2;
+              
+              lines.forEach((textLine, i) => {
+                // Add shadow text for depth
+                textGroup.append('text')
+                  .attr('x', 0)
+                  .attr('y', startY + i * lineHeight + 1)
+                  .attr('text-anchor', 'middle')
+                  .attr('fill', '#000000')
+                  .attr('fill-opacity', 0.8)
+                  .attr('font-size', fontSize)
+                  .attr('font-weight', 'bold')
+                  .attr('font-family', 'Orbitron, sans-serif')
+                  .style('pointer-events', 'none')
+                  .text(textLine);
+                  
+                // Add main text
+                textGroup.append('text')
+                  .attr('x', 0)
+                  .attr('y', startY + i * lineHeight)
+                  .attr('text-anchor', 'middle')
+                  .attr('fill', '#ffffff')
+                  .attr('font-size', fontSize)
+                  .attr('font-weight', '700')
+                  .attr('font-family', 'Orbitron, sans-serif')
+                  .attr('letter-spacing', '0.5px')
+                  .style('text-shadow', '0 0 10px rgba(255,255,255,0.5)')
+                  .style('pointer-events', 'none')
+                  .text(textLine);
+              });
+            }
+          });
+        }
+      }, 250);
+    });
+    
+  </script>
+</body>
+</html>
