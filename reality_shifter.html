@@ -261,6 +261,10 @@
       text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
       margin-bottom: 20px;
       pointer-events: none;
+      position: relative;
+      z-index: 20;
+      background: rgba(0, 0, 0, 0.7);
+      border-radius: 10px;
     }
     
     .obstacle-node {
@@ -1079,9 +1083,9 @@
         const col = i % cols;
         const row = Math.floor(i / cols);
         
-        // Responsive spacing with padding
+        // Responsive spacing with padding - increase top padding on mobile for belief text
         const paddingX = isMobile ? 10 : 100;
-        const paddingY = isMobile ? 30 : 80;
+        const paddingY = isMobile ? 80 : 80; // Increased from 30 to 80 for mobile
         
         // For mobile with many nodes, expand the container height
         const baseHeight = isMobile ? 500 : height;
@@ -1125,7 +1129,7 @@
       // Set SVG height based on number of nodes
       if (isMobile && levelObstacles.length > 4) {
         const rows = Math.ceil(levelObstacles.length / 2); // 2 columns on mobile
-        const svgHeight = rows * 120 + 100; // 120px per row + padding
+        const svgHeight = rows * 120 + 160; // 120px per row + more padding for belief text
         svg.attr('height', svgHeight);
         
         // Also update container height
