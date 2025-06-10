@@ -651,7 +651,7 @@
       }
       
       .reality-layers {
-        height: 400px;
+        min-height: 400px;
         margin-bottom: 1rem;
       }
       
@@ -734,14 +734,14 @@
     <p class="tagline">Transform Your Assumptions, Transform Your Reality</p>
     
     <div class="instructions">
-      <h3>How to Play</h3>
+      <h3>How It Works</h3>
       <ul>
-        <li>Click red limiting beliefs to transform them into green empowering affirmations</li>
-        <li>Each transformation uses one assumption token (✨)</li>
-        <li>Build combos by transforming beliefs quickly - earn bonus tokens at 3x combo!</li>
-        <li>Use "Assume New Reality" to meditate and gain 1-2 extra tokens (once per level)</li>
-        <li>Transform ALL beliefs to complete the level - plan your token usage wisely!</li>
-        <li>Leftover tokens = bonus points! Try to complete levels efficiently</li>
+        <li>Click red limiting beliefs to visualize their transformation into empowering affirmations</li>
+        <li>Each transformation uses quantum energy (✨) which regenerates over time</li>
+        <li>Take your time - this is a meditation on shifting perspectives, not a race</li>
+        <li>Use "Assume New Reality" to instantly recharge your transformation energy</li>
+        <li>Transform beliefs at your own pace to shift into higher consciousness</li>
+        <li>Each level represents a different aspect of reality to transcend</li>
       </ul>
     </div>
     
@@ -777,20 +777,20 @@
     
     <div class="stats-panel">
       <div class="stat-item">
-        <div class="stat-label">Transformations</div>
+        <div class="stat-label">Beliefs Transformed</div>
         <div class="stat-value" id="transformCount">0</div>
       </div>
       <div class="stat-item">
-        <div class="stat-label">Reality Shifts</div>
+        <div class="stat-label">Realities Shifted</div>
         <div class="stat-value" id="shiftCount">0</div>
       </div>
       <div class="stat-item">
-        <div class="stat-label">Master Score</div>
+        <div class="stat-label">Consciousness Level</div>
         <div class="stat-value" id="masterScore">0</div>
       </div>
       <div class="stat-item">
-        <div class="stat-label">Combo</div>
-        <div class="stat-value" id="comboCount">0</div>
+        <div class="stat-label">Flow State</div>
+        <div class="stat-value" id="comboCount">Ready</div>
       </div>
     </div>
   </div>
@@ -810,9 +810,9 @@
       <h3 class="visualization-title">Pause & Visualize</h3>
       <div class="limiting-belief" id="limitingBeliefDisplay"></div>
       <p class="visualization-prompt" id="visualizationPrompt">
-        Close your eyes for a moment. Feel how this belief has limited you. 
-        Now imagine yourself free from this limitation. See yourself living 
-        as if the new belief were already true. Feel the emotions of that freedom.
+        Take a moment to reflect on this belief. How has it shaped your reality? 
+        Now visualize yourself embodying the new empowering belief. 
+        Feel the shift in your energy as you embrace this new perspective.
       </p>
       <div class="empowering-belief" id="empoweringBeliefDisplay"></div>
       <div class="visualization-actions">
@@ -996,10 +996,13 @@
     // Set total levels
     totalLevelsEl.textContent = levels.length;
     
+    // Energy regeneration timer
+    let energyRegenTimer = null;
+    
     // Initialize game
     function initLevel() {
       const level = levels[gameState.currentLevel - 1];
-      gameState.tokens = level.tokens;
+      gameState.tokens = 3; // Start with 3 energy
       gameState.levelComplete = false;
       gameState.combo = 0;
       gameState.assumeUsed = false;
@@ -1010,7 +1013,7 @@
       tokenCountEl.textContent = gameState.tokens;
       beliefTextEl.textContent = level.belief;
       document.getElementById('possibilityText').textContent = level.possibility;
-      comboCountEl.textContent = '0x';
+      comboCountEl.textContent = 'Flow State';
       
       // Reset layers
       beliefLayerEl.style.display = 'flex'; // Make sure belief layer is visible
@@ -1026,8 +1029,29 @@
       clearObstacles();
       createObstacles(level.obstacles);
       
+      // Start energy regeneration
+      startEnergyRegeneration();
+      
       // Show quote
       showRandomQuote();
+    }
+    
+    // Start energy regeneration
+    function startEnergyRegeneration() {
+      clearInterval(energyRegenTimer);
+      energyRegenTimer = setInterval(() => {
+        if (gameState.tokens < 5) { // Max 5 energy
+          gameState.tokens++;
+          tokenCountEl.textContent = gameState.tokens;
+          
+          // Visual pulse effect on token icon
+          const tokenIcon = document.querySelector('.token-icon');
+          tokenIcon.style.transform = 'scale(1.2)';
+          setTimeout(() => {
+            tokenIcon.style.transform = 'scale(1)';
+          }, 300);
+        }
+      }, 5000); // Regenerate 1 energy every 5 seconds
     }
     
     // Network visualization variables
@@ -1057,9 +1081,16 @@
         
         // Responsive spacing with padding
         const paddingX = isMobile ? 10 : 100;
-        const paddingY = isMobile ? 50 : 80;
+        const paddingY = isMobile ? 30 : 80;
+        
+        // For mobile with many nodes, expand the container height
+        const baseHeight = isMobile ? 500 : height;
+        const minCellHeight = isMobile ? 100 : 120;
+        const neededHeight = rows * minCellHeight + paddingY * 2;
+        const actualHeight = Math.max(baseHeight, neededHeight);
+        
         const cellWidth = (width - paddingX * 2) / cols;
-        const cellHeight = (height - paddingY * 2) / rows;
+        const cellHeight = Math.max(minCellHeight, (actualHeight - paddingY * 2) / rows);
         
         // Center nodes in each cell
         const xBase = paddingX + cellWidth * col + cellWidth / 2;
@@ -1087,9 +1118,20 @@
         links.push({ source: i, target: i + 1 });
       }
       
-      // Setup SVG
+      // Setup SVG with dynamic height for mobile
       svg = d3.select('#networkCanvas');
       svg.selectAll('*').remove();
+      
+      // Set SVG height based on number of nodes
+      if (isMobile && levelObstacles.length > 4) {
+        const rows = Math.ceil(levelObstacles.length / 2); // 2 columns on mobile
+        const svgHeight = rows * 120 + 100; // 120px per row + padding
+        svg.attr('height', svgHeight);
+        
+        // Also update container height
+        const container = document.getElementById('realityLayers');
+        container.style.height = svgHeight + 'px';
+      }
       
       // Create defs for gradients and filters
       const defs = svg.append('defs');
@@ -1456,27 +1498,15 @@
       tokenCountEl.textContent = gameState.tokens;
       transformCountEl.textContent = gameState.transformations;
       
-      // Update combo
-      clearTimeout(comboTimer);
+      // Update flow state
       gameState.combo++;
-      if (gameState.combo > gameState.maxCombo) {
-        gameState.maxCombo = gameState.combo;
-      }
-      comboCountEl.textContent = gameState.combo + 'x';
+      const flowStates = ['Awakening', 'Expanding', 'Transcending', 'Illuminated', 'Infinite'];
+      const flowIndex = Math.min(gameState.combo - 1, flowStates.length - 1);
+      comboCountEl.textContent = flowStates[flowIndex];
       
-      // Combo bonus: At 3x combo, earn a bonus token!
-      if (gameState.combo === 3) {
-        gameState.tokens++;
-        tokenCountEl.textContent = gameState.tokens;
-        createBonusTokenEffect();
-        showRandomQuote();
-      }
-      
-      // Reset combo after 3 seconds
-      comboTimer = setTimeout(() => {
-        gameState.combo = 0;
-        comboCountEl.textContent = '0x';
-      }, 3000);
+      // Add glow effect to stats panel based on flow state
+      const statsPanel = document.querySelector('.stats-panel');
+      statsPanel.style.boxShadow = `0 0 ${10 + flowIndex * 10}px rgba(255, 216, 81, ${0.3 + flowIndex * 0.1})`;
       
       // Mark as transformed
       currentObstacle.transformed = true;
@@ -1701,17 +1731,26 @@
     
     // Show level complete
     function showLevelComplete() {
-      const bonusPoints = gameState.tokens * 50;
-      updateScore(bonusPoints);
+      updateScore(100);
       
-      modalMessageEl.textContent = `You've successfully shifted your perspective! Bonus: ${bonusPoints} points for ${gameState.tokens} tokens remaining.`;
+      const completionMessages = [
+        "You've transcended this layer of limiting beliefs",
+        "Your consciousness has expanded to a new frequency",
+        "Reality has shifted to match your new assumptions",
+        "You've mastered this aspect of conscious creation",
+        "Your vibration has elevated to a higher state"
+      ];
+      
+      modalMessageEl.textContent = completionMessages[Math.floor(Math.random() * completionMessages.length)];
       levelCompleteModalEl.classList.add('show');
     }
     
-    // Update score
+    // Update consciousness level
     function updateScore(points) {
       gameState.score += points;
-      masterScoreEl.textContent = gameState.score;
+      // Display as consciousness level (divide by 100 for cleaner numbers)
+      const level = Math.floor(gameState.score / 100);
+      masterScoreEl.textContent = level;
     }
     
     // Show random quote
@@ -1755,43 +1794,51 @@
     `;
     document.head.appendChild(style);
     
-    // Assume new reality - now grants tokens!
+    // Assume new reality - instant energy recharge
     assumeBtnEl.addEventListener('click', () => {
-      if (!gameState.levelComplete && !gameState.assumeUsed) {
-        // Mark as used
-        gameState.assumeUsed = true;
-        assumeBtnEl.textContent = 'Reality Shifted!';
-        assumeBtnEl.disabled = true;
-        
-        // Grant 1-2 bonus tokens
-        const bonusTokens = Math.random() > 0.5 ? 2 : 1;
-        gameState.tokens += bonusTokens;
+      if (!gameState.levelComplete) {
+        // Full energy recharge
+        gameState.tokens = 5;
         tokenCountEl.textContent = gameState.tokens;
         
-        // Visual effect
-        for (let i = 0; i < bonusTokens; i++) {
-          setTimeout(() => createBonusTokenEffect(), i * 300);
+        // Visual effect - multiple energy bursts
+        for (let i = 0; i < 3; i++) {
+          setTimeout(() => createBonusTokenEffect(), i * 200);
         }
         
-        // Reality shift effect
-        beliefLayerEl.style.filter = 'hue-rotate(180deg)';
+        // Reality shift effect - more dramatic
+        const container = document.querySelector('.reality-layers');
+        container.style.filter = 'hue-rotate(180deg) brightness(1.5)';
         setTimeout(() => {
-          beliefLayerEl.style.filter = '';
-        }, 1000);
+          container.style.filter = '';
+        }, 1500);
         
-        // Show special meditation quote
-        realityQuoteEl.textContent = bonusTokens === 2 ? 
-          "Deep meditation achieved! Your consciousness expands (+2 tokens)" : 
-          "Reality shifts to your will (+1 token)";
+        // Show meditation quote
+        const meditationQuotes = [
+          "Your consciousness expands beyond all limitations",
+          "Reality bends to match your highest vision",
+          "You are one with the infinite field of possibility",
+          "Your assumptions create worlds",
+          "As within, so without - reality mirrors your beliefs"
+        ];
+        realityQuoteEl.textContent = meditationQuotes[Math.floor(Math.random() * meditationQuotes.length)];
         realityQuoteEl.classList.add('show');
         setTimeout(() => {
           realityQuoteEl.classList.remove('show');
         }, 5000);
         
-        // Score bonus
+        // Update consciousness level
         updateScore(50);
         gameState.shifts++;
         shiftCountEl.textContent = gameState.shifts;
+        
+        // Disable button temporarily to prevent spam
+        assumeBtnEl.disabled = true;
+        assumeBtnEl.textContent = 'Integrating...';
+        setTimeout(() => {
+          assumeBtnEl.disabled = false;
+          assumeBtnEl.textContent = 'Assume New Reality';
+        }, 3000);
       }
     });
     
