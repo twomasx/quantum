@@ -1056,8 +1056,8 @@
         const row = Math.floor(i / cols);
         
         // Responsive spacing with padding
-        const paddingX = isMobile ? 15 : 100;
-        const paddingY = isMobile ? 60 : 80;
+        const paddingX = isMobile ? 10 : 100;
+        const paddingY = isMobile ? 50 : 80;
         const cellWidth = (width - paddingX * 2) / cols;
         const cellHeight = (height - paddingY * 2) / rows;
         
@@ -1150,8 +1150,8 @@
         .style('pointer-events', 'all'); // Ensure clicks work
       
       // Responsive sizing
-      const nodeWidth = isMobile ? 140 : 180;
-      const nodeHeight = isMobile ? 60 : 70;
+      const nodeWidth = isMobile ? 120 : 180;
+      const nodeHeight = isMobile ? 80 : 70;
       
       // Add outer glow circle
       nodeElements.append('circle')
@@ -1189,13 +1189,13 @@
         const group = d3.select(this);
         const text = d.transformed ? d.empowering : d.limiting;
         const words = text.split(' ');
-        const lineHeight = 18;
+        const lineHeight = isMobile ? 14 : 18;
         let line = [];
         let lineNumber = 0;
-        const maxWidth = 160;
+        const maxWidth = isMobile ? 100 : 160;
         
         // Create a temporary text element to measure text width
-        const fontSize = isMobile ? '14px' : '16px';
+        const fontSize = isMobile ? '12px' : '16px';
         const tempText = group.append('text')
           .style('visibility', 'hidden')
           .attr('font-size', fontSize)
@@ -1512,10 +1512,11 @@
       const group = nodeSelection;
       const text = currentObstacle.empowering;
       const words = text.split(' ');
-      const lineHeight = 18;
+      const isMobile = window.innerWidth < 768;
+      const lineHeight = isMobile ? 14 : 18;
       let line = [];
-      const maxWidth = 160;
-      const fontSize = window.innerWidth < 768 ? '14px' : '16px';
+      const maxWidth = isMobile ? 100 : 160;
+      const fontSize = isMobile ? '12px' : '16px';
       
       // Create temporary text for measuring
       const tempText = group.append('text')
@@ -1889,10 +1890,11 @@
               const group = nodeSelection;
               const text = node.empowering;
               const words = text.split(' ');
-              const lineHeight = 18;
+              const isMobile = window.innerWidth < 768;
+              const lineHeight = isMobile ? 14 : 18;
               let line = [];
-              const maxWidth = 160;
-              const fontSize = window.innerWidth < 768 ? '14px' : '16px';
+              const maxWidth = isMobile ? 100 : 160;
+              const fontSize = isMobile ? '12px' : '16px';
               
               // Create temporary text for measuring
               const tempText = group.append('text')
